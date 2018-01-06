@@ -12,7 +12,6 @@ class Site extends Component {
         "About" : <About/>
     };
     this.state = {activePage: "Splash"}
-    //this.activePage = "Splash";
     this.handleAboutBtn = this.handleAboutBtn.bind(this);
     this.handleSplashBtn = this.handleSplashBtn.bind(this);
   }
@@ -30,19 +29,24 @@ class Site extends Component {
   }
   
   render() {
-    //var content = this.pages[this.activePage];
     var content = this.pages[this.state.activePage];
     return (
       <div className="Site">
         <header className="Site-header">
-          <img src={logo} className="Site-logo" alt="logo" />
-          <h1 className="Site-title">Welcome to React</h1>
-          <button className="Splash-btn" onClick={this.handleSplashBtn}>
-            Splash
-          </button>
-          <button className="About-btn" onClick={this.handleAboutBtn}>
-            About
-          </button>
+          <div className="Nav-bar">
+            <div className="Nav-home" onClick={this.handleSplashBtn}>
+              <img src={logo} className="Site-logo" alt="logo" />
+              <h1 className="Site-title">Coffee Time</h1>
+            </div>
+            <div className="Nav-btns">
+              <button className="Nav-btn" onClick={this.handleSplashBtn}>
+                Splash
+              </button>
+              <button className="Nav-btn" onClick={this.handleAboutBtn}>
+                About
+              </button>
+            </div>
+          </div>
         </header>
         {content}
       </div>
