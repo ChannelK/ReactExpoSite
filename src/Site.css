@@ -49,6 +49,10 @@
   color: white;
 }
 
+.Nav-btn:hover {
+    background-color: #404040;
+}
+
 .About-root {
   padding: 10px;
 }
@@ -88,6 +92,10 @@
   bottom: 10px;
   position: absolute;
   left: 0px;
+}
+
+.clickable {
+    cursor: pointer;
 }
 
 @keyframes App-logo-spin {

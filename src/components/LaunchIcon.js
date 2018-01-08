@@ -5,7 +5,7 @@ class LaunchIcon extends Component {
   
   render() {
     return (
-      <div className="LaunchIcon-root App-selector">
+      <div className="LaunchIcon-root App-selector clickable">
         <img className="App-Icon" src={this.props.icon} alt={"Launch " + this.props.label}/>
         <span className="App-Label">{this.props.label}</span>
       </div>

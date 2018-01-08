@@ -34,15 +34,15 @@ class Site extends Component {
       <div className="Site">
         <header className="Site-header">
           <div className="Nav-bar">
-            <div className="Nav-home" onClick={this.handleSplashBtn}>
+            <div className="Nav-home clickable" onClick={this.handleSplashBtn}>
               <img src={logo} className="Site-logo" alt="logo" />
               <h1 className="Site-title">Coffee Time</h1>
             </div>
             <div className="Nav-btns">
-              <button className="Nav-btn" onClick={this.handleSplashBtn}>
+              <button className="Nav-btn clickable" onClick={this.handleSplashBtn}>
                 Splash
               </button>
-              <button className="Nav-btn" onClick={this.handleAboutBtn}>
+              <button className="Nav-btn clickable" onClick={this.handleAboutBtn}>
                 About
               </button>
             </div>
