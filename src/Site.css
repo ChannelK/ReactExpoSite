@@ -9,7 +9,7 @@
 
 .Site-header {
   text-align: center;
-  background-color: #222;
+  background-color: #533977;
   height: 50px;
   padding: 20px;
   color: white;
@@ -81,6 +81,13 @@
   height: 80%;
   margin: 10%;
   position:absolute
+}
+
+.App-Label {
+  width: 100%;
+  bottom: 10px;
+  position: absolute;
+  left: 0px;
 }
 
 @keyframes App-logo-spin {

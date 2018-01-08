@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import '../Site.css';
+import LaunchIcon from './LaunchIcon';
+import MugIcon from '../logo.svg';
 
 class Splash extends Component {
   
@@ -18,7 +20,7 @@ class Splash extends Component {
                 <div className="App-selector"> Placeholder 2</div>
             </div>
             <div className="App-grid-item">
-                <div className="App-selector"> Placeholder 3</div>
+                <LaunchIcon icon={MugIcon} label="App Label 3"/>
             </div>
         </div>
       </div>
