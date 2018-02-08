@@ -26,19 +26,22 @@ class Site extends Component {
   
   handleAboutBtn() {
     this.setState(prevState => ({
-      activePage: "About"
+      activePage: "About",
+      menuOpen: false
     }));
   }
   
   handleSplashBtn() {
     this.setState(prevState => ({
-      activePage: "Splash"
+      activePage: "Splash",
+      menuOpen: false
     }));      
   }
   
   handleGroundrBtn() {
     this.setState(prevState => ({
-      activePage: "Groundr"
+      activePage: "Groundr",
+      menuOpen: false
     })); 
   }
   
