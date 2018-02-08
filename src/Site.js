@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Splash from './components/Splash';
 import About from './components/About';
+import Groundr from './components/groundr/Groundr';
 import logo from './logo.svg';
+import menuIcon from './menu-icon.svg';
 import './Site.css';
 
 class Site extends Component {
@@ -9,11 +11,17 @@ class Site extends Component {
     super(props);
     this.pages = {
         "Splash" : <Splash/>,
-        "About" : <About/>
+        "About" : <About/>,
+        "Groundr": <Groundr/>
     };
-    this.state = {activePage: "Splash"}
+    this.state = {activePage: "Splash",
+                  menuOpen: false}
+    
+    this.handleMenuToggle = this.handleMenuToggle.bind(this);
+    
     this.handleAboutBtn = this.handleAboutBtn.bind(this);
     this.handleSplashBtn = this.handleSplashBtn.bind(this);
+    this.handleGroundrBtn = this.handleGroundrBtn.bind(this);
   }
   
   handleAboutBtn() {
@@ -28,6 +36,19 @@ class Site extends Component {
     }));      
   }
   
+  handleGroundrBtn() {
+    this.setState(prevState => ({
+      activePage: "Groundr"
+    })); 
+  }
+  
+  handleMenuToggle() {
+    //if the menu is open, close it, otherwise open it. Set the new state.
+    this.setState(prevState => ({
+      menuOpen: !this.state.menuOpen
+    })); 
+  }
+  
   render() {
     var content = this.pages[this.state.activePage];
     return (
@@ -38,13 +59,31 @@ class Site extends Component {
               <img src={logo} className="Site-logo" alt="logo" />
               <h1 className="Site-title">Coffee Time</h1>
             </div>
-            <div className="Nav-btns">
-              <button className="Nav-btn clickable" onClick={this.handleSplashBtn}>
-                Splash
-              </button>
-              <button className="Nav-btn clickable" onClick={this.handleAboutBtn}>
-                About
-              </button>
+            <div className="Nav-menu">
+                <a className="Nav-toggle clickable" onClick={this.handleMenuToggle}>
+                <img src={menuIcon} className="Nav-icon" alt="menu" />
+              </a>
+              <div className= {"Nav-btns " + (this.state.menuOpen? "Toggle-open" : "Toggle-close")}>
+                <nav>
+                  <ul className="Nav-btn-list">
+                    <li>
+                      <button className="Nav-btn clickable" onClick={this.handleSplashBtn}>
+                        Splash
+                      </button>
+                    </li>
+                    <li>
+                      <button className="Nav-btn clickable" onClick={this.handleGroundrBtn}>
+                        Groundr
+                      </button>
+                    </li>
+                    <li>
+                      <button className="Nav-btn clickable" onClick={this.handleAboutBtn}>
+                        About
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
           </div>
         </header>

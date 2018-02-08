@@ -11,7 +11,7 @@
   text-align: center;
   background-color: #533977;
   height: 50px;
-  padding: 20px;
+  padding: 20px 5px 20px 5px;
   color: white;
 }
 
@@ -33,24 +33,113 @@
   height: 50px;
 }
 
-.Nav-btns {
-  float: right;
-  text-align: center;
-  height: 50px;
-}
 
-.Nav-btn {
-  padding-left: 5px;
-  padding-right: 5px;
-  height: 30px;
-  margin: 10px;
-  background-color: #0a0a0a;
-  border: 0px;
-  color: white;
-}
 
-.Nav-btn:hover {
+@media (min-width: 768px) {
+  .Nav-btns {
+    float: right;
+    text-align: center;
+    height: 50px;
+  }
+  
+  .Nav-btn {
+    padding-left: 5px;
+    padding-right: 5px;
+    height: 30px;
+    margin-left: 10px;
+    background-color: #0a0a0a;
+    border: 0px;
+    color: white;
+  }
+  
+  .Nav-btn:hover {
     background-color: #404040;
+  }
+  
+  .Nav-btn-list {
+    margin: 0px;
+  }
+  
+  .Nav-menu {
+    float: right;
+  }
+  
+  .Nav-menu nav ul {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+  }
+  
+  .Nav-menu nav ul li {
+    list-style: none;
+    flex: 1 auto;
+  }
+  
+  .Nav-toggle {
+    visibility: hidden;
+  }
+}
+
+@media (max-width: 767px) {
+  .Nav-menu {
+    float: right;
+  }
+  
+  .Nav-toggle {
+    visibility: visible;
+    float: right;
+  }
+  
+  .Toggle-open {
+    visibility: visible;
+  }
+  
+  .Toggle-close {
+    visibility: hidden;
+  }
+  
+  .Nav-btns {
+    border-style: solid;
+    border-width: 2px 0px 0px 0px;
+    border-color: #FFF8E7;
+    position: fixed;
+    left: 0px;
+    top: 90px;
+    background-color:  #533977;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+  }
+  
+  .Nav-menu nav ul {
+    display: flex;
+    padding: 0px;
+    margin: 0px;
+    flex-direction: column;
+  }
+  
+  .Nav-menu nav ul li {
+    list-style: none;
+    flex: 1 auto;
+    width: 100%;
+    height: 80px;
+    border-style: solid;
+    border-width: 0px 0px 2px 0px;
+    border-color: #FFF8E7;
+  }
+  
+  .Nav-btn {
+    width: 100%;
+    height: 100%;
+    background-color: #634987;
+    border: 0px;
+    color: white;
+    font-size: 1.5em;
+  }
+  
+  .Nav-btn:hover {
+    background-color: #8369a7;
+  }
 }
 
 .About-root {
