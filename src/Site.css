@@ -169,6 +169,10 @@
   padding:10px 0px 10px 0px;
 }
 
+.App-Icon {
+  max-height: 300px;
+}
+
 .App-selector {
   width: 80%;
   height: 80%;
@@ -182,10 +186,17 @@
 }
 
 .clickable {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+/*groundr specific*/
+.Groundr-screen {
+  background-color: #a0a0a0;
+  width: 100%;
+  height: 700px;
 }
