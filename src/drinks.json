@@ -1,0 +1,41 @@
+{
+  "conversions": {
+    "weight": {
+      "g": {            "oz":0.035274,"lb":0.00220462},
+      "oz":{"g":28.3495,              "lb":0.0625},
+      "lb":{"g":453.592,"oz":16}
+    },
+    "volume": {
+      "shot":{                "floz":1,       "cup":0.125,     "ml":29.5735,"tsp":6,       "tbsp":2},
+      "floz":{"shot":1,                       "cup":0.125,     "ml":29.5735,"tsp":6,       "tbsp":2},
+      "cup": {"shot":8,       "floz":8,                        "ml":236.588,"tsp":48,      "tbsp":16},
+      "ml":  {"shot":0.033814,"floz":0.033814,"cup":0.00422675,             "tsp":0.202884,"tbsp":0.067628},
+      "tsp": {"shot":0.166667,"floz":0.166667,"cup":0.0208333,"ml":4.92892,                "tbsp":0.333333},
+      "tbsp":{"shot":0.5,     "floz":0.5,     "cup":0.0625,   "ml":14.7868, "tsp":3}
+    }
+  },
+  "recipes": [
+    {
+      "name": "bepis",
+      "desc": "This delicate drink is test",
+      "ingredients": [
+        {
+          "name" : "milk",
+          "quantity"  : 8,
+          "unit" : "floz"
+        },
+        {
+          "name" : "test juice",
+          "quantity"  : 999,
+          "unit" : "shot"
+        },
+        {
+          "name" : "valid powder",
+          "quantity"  : 1,
+          "unit" : "lb"
+        }
+      ],
+      "directions": "Pour test juice into milk and sprinkle valid powder to test."
+    }
+  ]
+}

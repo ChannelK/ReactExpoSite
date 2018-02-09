@@ -2,18 +2,24 @@ import React, { Component } from 'react';
 import '../../Site.css';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import drinks from '../../drinks.json';
 
 class Groundr extends Component {
-  /*
   constructor(props) {
     super(props);
+    this.state = {
+      selectedOption: {value: 'one', label: 'One'}
+    }
+    this.drinkTable = {};
+    this.listOptions = [];
+    for (var i = 0; i < drinks.recipes.length; i++) {
+      var drinkName = drinks.recipes[i].name;
+      this.drinkTable[i] = drinkName;
+      this.listOptions.push({value:i, label:drinkName});
+    }
   }
-  */
   
-  state = {
-    selectedOption: '',
-  }
-  handleChange = (selectedOption) => {
+  handleDrinkSelect = (selectedOption) => {
     this.setState({ selectedOption });
     console.log(`Selected: ${selectedOption.label}`);
   }
@@ -31,11 +37,8 @@ class Groundr extends Component {
             <Select
               name="form-field-name"
               value={value}
-              onChange={this.handleChange}
-              options={[
-                { value: 'one', label: 'One' },
-                { value: 'two', label: 'Two' },
-              ]}
+              onChange={this.handleDrinkSelect}
+              options={this.listOptions}
             />
           </div>
           <div className="Groundr-display">
