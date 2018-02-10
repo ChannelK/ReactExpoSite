@@ -1,5 +1,6 @@
 .Site {
   text-align: center;
+  min-width: 400px;
 }
 
 .Site-logo {
@@ -195,8 +196,43 @@
 }
 
 /*groundr specific*/
-.Groundr-screen {
+.Groundr-background {
   background-color: #a0a0a0;
   width: 100%;
-  height: 700px;
+}
+
+.Groundr-selector {
+  width: 100%;
+  padding: 10px 0px 10px 0px;
+  display: flex;
+  flex-direction: row;
+  flex: 1 auto;
+  justify-content: center;
+}
+
+.Groundr-select {
+  width: 80%;
+}
+
+.Groundr-selector-space {
+ height: 100%;
+ width: 10px;
+}
+
+.Groundr-submit{
+  min-width: 5%;
+}
+
+.Groundr-splitter {
+  width: 70%;
+  height: 2px;
+  margin: 10px auto 10px auto;
+  background-color: #dddddd;
+}
+
+.Groundr-display {
+  height: 600px;
+  width: 95%;
+  margin: auto;
+  background-color: #303030;
 }

@@ -7,9 +7,7 @@ import drinks from '../../drinks.json';
 class Groundr extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      selectedOption: {value: 'one', label: 'One'}
-    }
+    
     this.drinkTable = {};
     this.listOptions = [];
     for (var i = 0; i < drinks.recipes.length; i++) {
@@ -17,30 +15,57 @@ class Groundr extends Component {
       this.drinkTable[i] = drinkName;
       this.listOptions.push({value:i, label:drinkName});
     }
+    
+    this.state = {
+      selectedOption: null,
+      submittedOption: null
+    }
+    
+    this.handleSelectSubmit = this.handleSelectSubmit.bind(this);
   }
   
-  handleDrinkSelect = (selectedOption) => {
-    this.setState({ selectedOption });
-    console.log(`Selected: ${selectedOption.label}`);
+  handleDrinkSelect = (newSelection) => {
+    this.setState(prevState => ({
+      selectedOption: newSelection && newSelection.value
+    }));
+    
+    if(newSelection) {
+      console.log(`Selected: ${newSelection.label}`);
+    } else {
+      console.log(`Selected: null`);
+    }
+  }
+  
+  handleSelectSubmit() {
+    console.log(`Submitted: ${this.state.selectedOption}`);
+    const submitting = this.state.selectedOption;
+    this.setState(prevState => ({
+      submittedOption: submitting
+    }));
+    
   }
   
   render() {
-      
-    const { selectedOption } = this.state;
-  	const value = selectedOption && selectedOption.value;
+    const selectFeedback = this.state.selectedOption;
     
     return (
       <div className="Groundr-root">
         <h1 className="Groundr-title">Groundr</h1>
-        <div className="Groundr-screen">
+        <div className="Groundr-background">
           <div className="Groundr-selector">
             <Select
+              className="Groundr-select"
               name="form-field-name"
-              value={value}
+              value={selectFeedback}
               onChange={this.handleDrinkSelect}
               options={this.listOptions}
             />
+            <span className="Groundr-selector-space"/>
+            <button className="Groundr-submit clickable" onClick={this.handleSelectSubmit}>
+              Go
+            </button>
           </div>
+          <div className="Groundr-splitter"/>
           <div className="Groundr-display">
           </div>
         </div>

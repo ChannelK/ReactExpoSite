@@ -36,6 +36,28 @@
         }
       ],
       "directions": "Pour test juice into milk and sprinkle valid powder to test."
+    },
+    {
+      "name": "pebib",
+      "desc": "A robust flavor for testers",
+      "ingredients": [
+        {
+          "name" : "milk",
+          "quantity"  : 1,
+          "unit" : "floz"
+        },
+        {
+          "name" : "test juice",
+          "quantity"  : -1,
+          "unit" : "shot"
+        },
+        {
+          "name" : "valid powder",
+          "quantity"  : 8,
+          "unit" : "lb"
+        }
+      ],
+      "directions": "Consume all ingredients immediately."
     }
   ]
 }
