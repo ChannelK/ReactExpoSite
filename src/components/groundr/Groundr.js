@@ -3,17 +3,16 @@ import '../../Site.css';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import drinks from '../../drinks.json';
+import DrinkDisplay from './DrinkDisplay';
 
 class Groundr extends Component {
   constructor(props) {
     super(props);
     
-    this.drinkTable = {};
     this.listOptions = [];
     for (var i = 0; i < drinks.recipes.length; i++) {
       var drinkName = drinks.recipes[i].name;
-      this.drinkTable[i] = drinkName;
-      this.listOptions.push({value:i, label:drinkName});
+      this.listOptions.push({value:i, label:this.formatName(drinkName)});
     }
     
     this.state = {
@@ -45,8 +44,43 @@ class Groundr extends Component {
     
   }
   
+  formatName(oldName) {
+    var newName = [];
+    newName.push(oldName[0].toUpperCase());
+    for(var i=1;i < oldName.length;i++) {
+      if(oldName[i-1] === ' ') {
+        newName.push(oldName[i].toUpperCase());
+      } else {
+        newName.push(oldName[i]);
+      }
+    }
+    return newName;
+  }
+  
   render() {
     const selectFeedback = this.state.selectedOption;
+    
+    /*
+    var display = this.state.submittedOption != null ? 
+      <DrinkDisplay className="display" 
+        name = drinkTable[drinks.recipes[this.state.submittedOption].name]
+        desc = drinkTable[drinks.recipes[this.state.submittedOption].desc]
+      />:
+      <div className="Blank-drink"><span>Choose your character.</span></div>;
+    */
+    var display = null;
+    
+    if(this.state.submittedOption != null) {
+      const submittedRecipe = drinks.recipes[this.state.submittedOption]
+      display = <DrinkDisplay className="display" 
+        name={this.formatName(submittedRecipe.name)} 
+        desc={submittedRecipe.desc}
+        ingredients={submittedRecipe.ingredients}
+        directions={submittedRecipe.directions}
+      />;
+    } else {
+      display = <div className="Blank-drink"><span>Choose your character.</span></div>;
+    }
     
     return (
       <div className="Groundr-root">
@@ -67,6 +101,7 @@ class Groundr extends Component {
           </div>
           <div className="Groundr-splitter"/>
           <div className="Groundr-display">
+          {display}
           </div>
         </div>
       </div>

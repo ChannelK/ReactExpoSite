@@ -6,18 +6,29 @@
       "lb":{"g":453.592,"oz":16}
     },
     "volume": {
-      "shot":{                "floz":1,       "cup":0.125,     "ml":29.5735,"tsp":6,       "tbsp":2},
-      "floz":{"shot":1,                       "cup":0.125,     "ml":29.5735,"tsp":6,       "tbsp":2},
-      "cup": {"shot":8,       "floz":8,                        "ml":236.588,"tsp":48,      "tbsp":16},
-      "ml":  {"shot":0.033814,"floz":0.033814,"cup":0.00422675,             "tsp":0.202884,"tbsp":0.067628},
-      "tsp": {"shot":0.166667,"floz":0.166667,"cup":0.0208333,"ml":4.92892,                "tbsp":0.333333},
-      "tbsp":{"shot":0.5,     "floz":0.5,     "cup":0.0625,   "ml":14.7868, "tsp":3}
+      "shots":{                "floz":1,       "cups":0.125,     "ml":29.5735,"tsp":6,       "tbsp":2},
+      "floz":{"shots":1,                       "cups":0.125,     "ml":29.5735,"tsp":6,       "tbsp":2},
+      "cups":{"shots":8,       "floz":8,                         "ml":236.588,"tsp":48,      "tbsp":16},
+      "ml":  {"shots":0.033814,"floz":0.033814,"cups":0.00422675,             "tsp":0.202884,"tbsp":0.067628},
+      "tsp": {"shots":0.166667,"floz":0.166667,"cups":0.0208333, "ml":4.92892,                "tbsp":0.333333},
+      "tbsp":{"shots":0.5,     "floz":0.5,     "cups":0.0625,    "ml":14.7868, "tsp":3}
     }
+  },
+  "singulars": {
+    "g":"g",
+    "oz":"oz",
+    "lb":"lb",
+    "shots":"shot",
+    "floz":"floz",
+    "cups" :"cup",
+    "ml"  :"ml",
+    "tsp" :"tsp",
+    "tbsp":"tbsp"
   },
   "recipes": [
     {
       "name": "bepis",
-      "desc": "This delicate drink is test",
+      "desc": "This delicate drink is test.",
       "ingredients": [
         {
           "name" : "milk",
@@ -27,7 +38,7 @@
         {
           "name" : "test juice",
           "quantity"  : 999,
-          "unit" : "shot"
+          "unit" : "shots"
         },
         {
           "name" : "valid powder",
@@ -39,7 +50,7 @@
     },
     {
       "name": "pebib",
-      "desc": "A robust flavor for testers",
+      "desc": "A robust flavor for testers.",
       "ingredients": [
         {
           "name" : "milk",
@@ -49,7 +60,7 @@
         {
           "name" : "test juice",
           "quantity"  : -1,
-          "unit" : "shot"
+          "unit" : "shots"
         },
         {
           "name" : "valid powder",
@@ -58,6 +69,28 @@
         }
       ],
       "directions": "Consume all ingredients immediately."
+    },
+    {
+      "name": "Kelp Juice",
+      "desc": "A serious drink for serious comedians.",
+      "ingredients": [
+        {
+          "name" : "Kelp",
+          "quantity"  : 9,
+          "unit" : "lb"
+        },
+        {
+          "name" : "Water",
+          "quantity"  : 3,
+          "unit" : "cups"
+        },
+        {
+          "name" : "Orange",
+          "quantity"  : 3,
+          "unit" : "count"
+        }
+      ],
+      "directions": "Blend kelp with water for 5 hours, then dispose of contents. Swallow the oranges."
     }
   ]
 }
