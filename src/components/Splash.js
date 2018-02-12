@@ -14,13 +14,13 @@ class Splash extends Component {
         </p>
         <div className="App-grid-container">
             <div className="App-grid-item">
+                <LaunchIcon icon={MugIcon} navTrigger={this.props.navTriggers.groundr} label="Groundr"/>
+            </div>
+            <div className="App-grid-item">
                 <div className="App-selector"> Placeholder 1</div>
             </div>
             <div className="App-grid-item">
                 <div className="App-selector"> Placeholder 2</div>
-            </div>
-            <div className="App-grid-item">
-                <LaunchIcon icon={MugIcon} label="App Label 3"/>
             </div>
         </div>
       </div>

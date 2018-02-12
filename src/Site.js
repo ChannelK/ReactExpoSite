@@ -9,19 +9,25 @@ import './Site.css';
 class Site extends Component {
   constructor(props) {
     super(props);
-    this.pages = {
-        "Splash" : <Splash/>,
-        "About" : <About/>,
-        "Groundr": <Groundr/>
-    };
-    this.state = {activePage: "Splash",
-                  menuOpen: false}
     
     this.handleMenuToggle = this.handleMenuToggle.bind(this);
     
     this.handleAboutBtn = this.handleAboutBtn.bind(this);
     this.handleSplashBtn = this.handleSplashBtn.bind(this);
     this.handleGroundrBtn = this.handleGroundrBtn.bind(this);
+    
+    const navTriggers = {
+      "about":this.handleAboutBtn,
+      "splash":this.handleSplashBtn,
+      "groundr":this.handleGroundrBtn,
+    }
+    this.pages = {
+        "Splash" : <Splash navTriggers={navTriggers}/>,
+        "About" : <About/>,
+        "Groundr": <Groundr/>
+    };
+    this.state = {activePage: "Splash",
+                  menuOpen: false}
   }
   
   handleAboutBtn() {
@@ -70,17 +76,27 @@ class Site extends Component {
                 <nav>
                   <ul className="Nav-btn-list">
                     <li>
-                      <button className="Nav-btn clickable" onClick={this.handleSplashBtn}>
+                      <button className="Nav-btn clickable" id="splashNav" onClick={this.handleSplashBtn}>
                         Splash
                       </button>
                     </li>
                     <li>
-                      <button className="Nav-btn clickable" onClick={this.handleGroundrBtn}>
+                      <button className="Nav-btn clickable" id="groundrNav" onClick={this.handleGroundrBtn}>
                         Groundr
                       </button>
                     </li>
                     <li>
-                      <button className="Nav-btn clickable" onClick={this.handleAboutBtn}>
+                      <button className="Nav-btn clickable" id="grindquestNav">
+                        GrindQuest WIP
+                      </button>
+                    </li>
+                    <li>
+                      <button className="Nav-btn clickable" id="tbdNav">
+                        Placeholder
+                      </button>
+                    </li>
+                    <li>
+                      <button className="Nav-btn clickable" id="aboutNav" onClick={this.handleAboutBtn}>
                         About
                       </button>
                     </li>

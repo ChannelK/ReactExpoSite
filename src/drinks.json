@@ -6,12 +6,12 @@
       "lb":{"g":453.592,"oz":16}
     },
     "volume": {
-      "shots":{                "floz":1,       "cups":0.125,     "ml":29.5735,"tsp":6,       "tbsp":2},
-      "floz":{"shots":1,                       "cups":0.125,     "ml":29.5735,"tsp":6,       "tbsp":2},
-      "cups":{"shots":8,       "floz":8,                         "ml":236.588,"tsp":48,      "tbsp":16},
-      "ml":  {"shots":0.033814,"floz":0.033814,"cups":0.00422675,             "tsp":0.202884,"tbsp":0.067628},
-      "tsp": {"shots":0.166667,"floz":0.166667,"cups":0.0208333, "ml":4.92892,                "tbsp":0.333333},
-      "tbsp":{"shots":0.5,     "floz":0.5,     "cups":0.0625,    "ml":14.7868, "tsp":3}
+      "shots":{                 "fl oz":1,       "cups":0.125,     "ml":29.5735,"tsp":6,       "tbsp":2},
+      "fl oz":{"shots":1,                        "cups":0.125,     "ml":29.5735,"tsp":6,       "tbsp":2},
+      "cups": {"shots":8,       "fl oz":8,                         "ml":236.588,"tsp":48,      "tbsp":16},
+      "ml":   {"shots":0.033814,"fl oz":0.033814,"cups":0.00422675,             "tsp":0.202884,"tbsp":0.067628},
+      "tsp":  {"shots":0.166667,"fl oz":0.166667,"cups":0.0208333, "ml":4.92892,                "tbsp":0.333333},
+      "tbsp": {"shots":0.5,     "fl oz":0.5,     "cups":0.0625,    "ml":14.7868, "tsp":3}
     }
   },
   "singulars": {
@@ -19,7 +19,7 @@
     "oz":"oz",
     "lb":"lb",
     "shots":"shot",
-    "floz":"floz",
+    "fl oz":"fl oz",
     "cups" :"cup",
     "ml"  :"ml",
     "tsp" :"tsp",
@@ -29,11 +29,12 @@
     {
       "name": "bepis",
       "desc": "This delicate drink is test.",
+      "image": "art_latte.jpeg",
       "ingredients": [
         {
           "name" : "milk",
           "quantity"  : 8,
-          "unit" : "floz"
+          "unit" : "fl oz"
         },
         {
           "name" : "test juice",
@@ -43,7 +44,7 @@
         {
           "name" : "valid powder",
           "quantity"  : 1,
-          "unit" : "lb"
+          "unit" : "cups"
         }
       ],
       "directions": "Pour test juice into milk and sprinkle valid powder to test."
@@ -51,11 +52,12 @@
     {
       "name": "pebib",
       "desc": "A robust flavor for testers.",
+      "image": "art_latte.jpeg",
       "ingredients": [
         {
           "name" : "milk",
           "quantity"  : 1,
-          "unit" : "floz"
+          "unit" : "fl oz"
         },
         {
           "name" : "test juice",
@@ -73,6 +75,7 @@
     {
       "name": "Kelp Juice",
       "desc": "A serious drink for serious comedians.",
+      "image": "green_shake.jpeg",
       "ingredients": [
         {
           "name" : "Kelp",
@@ -90,11 +93,12 @@
           "unit" : "count"
         }
       ],
-      "directions": "Blend kelp with water for 5 hours, then dispose of contents. Swallow the oranges."
+      "directions": "Blend kelp with water. Let mixture rest for 10 hounrs then dispose of contents. Swallow the oranges whole."
     },
     {
       "name": "lorem ipsum",
       "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "image": "cortado.jpeg",
       "ingredients": [
         {
           "name" : "lorem",
@@ -119,7 +123,7 @@
         {
           "name" : "amet",
           "quantity"  : 5,
-          "unit" : "floz"
+          "unit" : "fl oz"
         },
         {
           "name" : "consectetur",

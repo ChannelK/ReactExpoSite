@@ -41,37 +41,60 @@
     float: right;
     text-align: center;
     height: 50px;
+    padding: 0px;
   }
   
   .Nav-btn {
     padding-left: 5px;
     padding-right: 5px;
-    height: 30px;
+    height: 47px;
     margin-left: 10px;
     background-color: #0a0a0a;
     border: 0px;
     color: white;
+    border-radius:3px;
   }
   
   .Nav-btn:hover {
-    background-color: #404040;
+    background-color: #2a2a2a;
+    border-style: solid;
+    border-width: 0px 0px 3px 0px;
+    height: 50px;
+    border-radius:3px;
+  }
+  
+  #splashNav {
+    border-color: red;
+  }
+  
+  #groundrNav {
+    border-color: orange;
+  }
+  
+  #grindquestNav {
+    border-color: yellow;
+  }
+  
+  #tbdNav {
+    border-color: green;
+  }
+  
+  #aboutNav {
+    border-color: #3030FF;
   }
   
   .Nav-btn-list {
     margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: row;
   }
   
   .Nav-menu {
     float: right;
   }
   
-  .Nav-menu nav ul {
-    display: flex;
-    flex-direction: row;
-    margin-top: 10px;
-  }
-  
-  .Nav-menu nav ul li {
+  .Nav-btn-list li {
     list-style: none;
     flex: 1 auto;
   }
@@ -236,6 +259,7 @@
   width: 95%;
   margin: 10px auto 10px auto;
   background-color: #303030;
+  border-radius: 8px;
 }
 
 .Blank-drink {
@@ -256,16 +280,43 @@
 .Drink-title {
   margin: 2px;
   padding: 2px;
+  font-size:3em;
 }
 
 .Drink-desc {
   font-style: italic;
+  padding: 3px;
+  margin: 0px auto 30px auto;
 }
 
 .Drink-ingredients {
-  display: inline-block;
+  border-collapse: collapse;
+  margin: auto;
+  
 }
 
-.Drink-ingredients li {
+.Drink-ingredient-name {
+  text-align: right;
+  padding: 3px 6px 3px 3px;
+}
+
+
+.Drink-ingredient-amount {
   text-align: left;
+  padding: 3px 3px 3px 6px;
+}
+
+.Drink-directions {
+  padding: 5px;
+}
+
+.Scale-pic {
+  max-width: 80%;
+  max-height:50vh;
+  padding: 0px;
+  margin: 10px auto 10px auto;
+  border-style: solid;
+  border-width: 5px;
+  border-color: white;
+  border-radius: 8px;
 }

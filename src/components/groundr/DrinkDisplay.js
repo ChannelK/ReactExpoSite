@@ -21,14 +21,40 @@ class DrinkDisplay extends Component {
     return lis;
   }
   
+  singularize(unit) {
+    const convert = drinks.singulars[unit];
+    return convert?convert:unit;
+  }
+  
+  getTableRows(ings) {
+    var rows = [];
+    for(var i = 0;i < ings.length;i++) {
+      //singularize if appropriate and available
+      const unit = ings[i].quantity===1?this.singularize(ings[i].unit):ings[i].unit;
+      rows.push(<tr className="Drink-ingredient" key={i}>
+        <td className="Drink-ingredient-name">
+          {ings[i].name}
+        </td>
+        <td>:</td>
+        <td className="Drink-ingredient-amount">
+          {ings[i].quantity + ' ' + unit}
+        </td>
+      </tr>);
+    }
+    return rows;
+  }
+  
   render() {
     return (
       <div className="Drink-root">
         <h1 className="Drink-title">{this.props.name}</h1>
         <p className="Drink-desc">{this.props.desc}</p>
-        <ul className="Drink-ingredients">
-          {this.getIngredLi(this.props.ingredients)}
-        </ul>
+        <img className="Scale-pic" src={require("../../assets/"+this.props.imgsrc)} alt="Coffee Cup"/>
+        <table className="Drink-ingredients">
+          <tbody>
+            {this.getTableRows(this.props.ingredients)}
+          </tbody>
+        </table>
         <p className="Drink-directions">{this.props.directions}</p>
       </div>
     );

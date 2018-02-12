@@ -75,6 +75,7 @@ class Groundr extends Component {
       display = <DrinkDisplay className="display" 
         name={this.formatName(submittedRecipe.name)} 
         desc={submittedRecipe.desc}
+        imgsrc={submittedRecipe.image}
         ingredients={submittedRecipe.ingredients}
         directions={submittedRecipe.directions}
       />;
