@@ -47,7 +47,7 @@
           "unit" : "cups"
         }
       ],
-      "directions": "Pour test juice into milk and sprinkle valid powder to test."
+      "directions": "Pour test juice into milk and sprinkle powder to taste."
     },
     {
       "name": "pebib",
@@ -93,7 +93,7 @@
           "unit" : "count"
         }
       ],
-      "directions": "Blend kelp with water. Let mixture rest for 10 hounrs then dispose of contents. Swallow the oranges whole."
+      "directions": "Blend kelp with water. Let mixture rest for 10 hours then dispose of contents. Swallow the oranges whole."
     },
     {
       "name": "lorem ipsum",
