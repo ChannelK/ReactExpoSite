@@ -76,27 +76,27 @@ class Site extends Component {
                 <nav>
                   <ul className="Nav-btn-list">
                     <li>
-                      <button className="Nav-btn clickable" id="splashNav" onClick={this.handleSplashBtn}>
+                      <button className={"Nav-btn clickable Nav-btn-" + (this.state.activePage==="Splash"?"selected":"unselected")} id="splashNav" onClick={this.handleSplashBtn}>
                         Splash
                       </button>
                     </li>
                     <li>
-                      <button className="Nav-btn clickable" id="groundrNav" onClick={this.handleGroundrBtn}>
+                      <button className={"Nav-btn clickable Nav-btn-" + (this.state.activePage==="Groundr"?"selected":"unselected")} id="groundrNav" onClick={this.handleGroundrBtn}>
                         Groundr
                       </button>
                     </li>
                     <li>
-                      <button className="Nav-btn clickable" id="grindquestNav">
+                      <button className={"Nav-btn clickable Nav-btn-" + (this.state.activePage==="GrindQuest"?"selected":"unselected")} id="grindquestNav">
                         GrindQuest WIP
                       </button>
                     </li>
                     <li>
-                      <button className="Nav-btn clickable" id="tbdNav">
+                      <button className={"Nav-btn clickable Nav-btn-" + (this.state.activePage==="Placeholder"?"selected":"unselected")} id="tbdNav">
                         Placeholder
                       </button>
                     </li>
                     <li>
-                      <button className="Nav-btn clickable" id="aboutNav" onClick={this.handleAboutBtn}>
+                      <button className={"Nav-btn clickable Nav-btn-" + (this.state.activePage==="About"?"selected":"unselected")} id="aboutNav" onClick={this.handleAboutBtn}>
                         About
                       </button>
                     </li>

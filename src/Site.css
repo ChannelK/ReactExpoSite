@@ -1,3 +1,5 @@
+/*#634987 color theme*/
+
 .Site {
   text-align: center;
   min-width: 350px;
@@ -10,10 +12,11 @@
 
 .Site-header {
   text-align: center;
-  background-color: #533977;
+  background-color: #707070;
   height: 50px;
   padding: 20px 5px 20px 5px;
   color: white;
+  
 }
 
 .Nav-bar > *{
@@ -55,7 +58,15 @@
     border-radius:3px;
   }
   
-  .Nav-btn:hover {
+  .Nav-btn-selected {
+    background-color: #00a3cc;
+  }
+  
+  .Nav-btn-unselected {
+    background-color: black;
+  }
+  
+  .Nav-btn-unselected:hover {
     background-color: #2a2a2a;
     border-style: solid;
     border-width: 0px 0px 3px 0px;
@@ -102,6 +113,7 @@
   .Nav-toggle {
     visibility: hidden;
   }
+  
 }
 
 @media (max-width: 767px) {
@@ -129,7 +141,7 @@
     position: fixed;
     left: 0px;
     top: 90px;
-    background-color:  #533977;
+    background-color:  #707070;
     width: 100%;
     height: 100%;
     z-index: 100;
@@ -155,14 +167,21 @@
   .Nav-btn {
     width: 100%;
     height: 100%;
-    background-color: #634987;
     border: 0px;
     color: white;
     font-size: 1.5em;
   }
   
-  .Nav-btn:hover {
-    background-color: #8369a7;
+  .Nav-btn-selected {
+    background-color: #00a3cc;
+  }
+  
+  .Nav-btn-unselected {
+    background-color: #707070;
+  }
+  
+  .Nav-btn-unselected:hover {
+    background-color: #909090;
   }
 }
 
@@ -188,7 +207,7 @@
   background-color: rgba(255, 255, 255, 0.8);
   border-style: solid;
   border-width: 4px 0px 0px 0px;
-  border-color: rgba(0, 0, 0, 0.8);
+  border-color: #00ccff;
   width: 100%;
   padding:10px 0px 10px 0px;
 }
@@ -220,12 +239,13 @@
 
 /*groundr specific*/
 .Groundr-background {
-  background-color: #a0a0a0;
+  background-color: white;
   width: 100%;
   height:100%;
 }
 
 .Groundr-selector {
+  background-color: #00ccff;
   width: 100%;
   padding: 10px 0px 10px 0px;
   display: flex;
@@ -248,10 +268,10 @@
 }
 
 .Groundr-splitter {
-  width: 70%;
+  width: 40%;
   height: 2px;
-  margin: 10px auto 10px auto;
-  background-color: #dddddd;
+  margin: 14px auto 14px auto;
+  background-color: black;
 }
 
 .Groundr-display {
@@ -285,8 +305,8 @@
 
 .Drink-desc {
   font-style: italic;
-  padding: 3px;
-  margin: 0px auto 30px auto;
+  padding: 3px 10px 3px 10px;
+  margin: 0px auto 20px auto;
 }
 
 .Drink-ingredients {

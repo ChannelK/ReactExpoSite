@@ -74,7 +74,7 @@
     },
     {
       "name": "Kelp Juice",
-      "desc": "A serious drink for serious comedians.",
+      "desc": "A serious drink for serious people.",
       "image": "green_shake.jpeg",
       "ingredients": [
         {
@@ -93,7 +93,25 @@
           "unit" : "count"
         }
       ],
-      "directions": "Blend kelp with water. Let mixture rest for 10 hours then dispose of contents. Swallow the oranges whole."
+      "directions": "Blend kelp with water. Let mixture rest for 10 hours then pour into garbage. Garnish with whole oranges."
+    },
+    {
+      "name": "Flat White",
+      "desc": "An espresso based coffee drink prepared by pouring microfoam into a single or double shot of espresso.",
+      "image": "flat_white.jpg",
+      "ingredients": [
+        {
+          "name" : "Espresso",
+          "quantity"  : 1,
+          "unit" : "shots"
+        },
+        {
+          "name" : "Milk",
+          "quantity"  : 3,
+          "unit" : "fl oz"
+        }
+      ],
+      "directions": "Pre-heat a 6-ounce cup before starting. Pull a single or double shot of espresso directly into the cup. Steam the milk to a warm temperature in a pitcher, swirling to break up large bubbles. Pour the steamed milk into the espresso in a single spot. Lift the pitcher while pouring to better mix the milk and espresso. Serve immediately."
     },
     {
       "name": "lorem ipsum",

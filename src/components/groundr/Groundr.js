@@ -15,6 +15,20 @@ class Groundr extends Component {
       this.listOptions.push({value:i, label:this.formatName(drinkName)});
     }
     
+    //sort options alphabetically for user ease
+    this.listOptions.sort(function(a,b) {
+      var nameA = a.label.toUpperCase();
+      var nameB = b.label.toUpperCase();
+      //console.log("comparing "+nameA+" and "+nameB);
+      if(nameA < nameB) {
+        return -1;
+      } else if(nameA > nameB) {
+        return 1;
+      } else {
+        return 0;
+      }
+    } );
+    
     this.state = {
       selectedOption: null,
       submittedOption: null
@@ -54,20 +68,12 @@ class Groundr extends Component {
         newName.push(oldName[i]);
       }
     }
-    return newName;
+    return newName.join("");
   }
   
   render() {
     const selectFeedback = this.state.selectedOption;
     
-    /*
-    var display = this.state.submittedOption != null ? 
-      <DrinkDisplay className="display" 
-        name = drinkTable[drinks.recipes[this.state.submittedOption].name]
-        desc = drinkTable[drinks.recipes[this.state.submittedOption].desc]
-      />:
-      <div className="Blank-drink"><span>Choose your character.</span></div>;
-    */
     var display = null;
     
     if(this.state.submittedOption != null) {
@@ -80,7 +86,7 @@ class Groundr extends Component {
         directions={submittedRecipe.directions}
       />;
     } else {
-      display = <div className="Blank-drink"><span>Choose your character.</span></div>;
+      display = <div className="Blank-drink"><span>Select a drink from the list.</span></div>;
     }
     
     return (
