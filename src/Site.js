@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Splash from './components/Splash';
 import About from './components/About';
 import Groundr from './components/groundr/Groundr';
+import GrindQuest from './components/grindquest/GrindQuest';
 import logo from './logo.svg';
 import menuIcon from './menu-icon.svg';
 import './Site.css';
@@ -15,16 +16,19 @@ class Site extends Component {
     this.handleAboutBtn = this.handleAboutBtn.bind(this);
     this.handleSplashBtn = this.handleSplashBtn.bind(this);
     this.handleGroundrBtn = this.handleGroundrBtn.bind(this);
+    this.handleGrindQuestBtn = this.handleGrindQuestBtn.bind(this);
     
     const navTriggers = {
       "about":this.handleAboutBtn,
       "splash":this.handleSplashBtn,
       "groundr":this.handleGroundrBtn,
+      "grindquest":this.handleGrindQuestBtn
     }
     this.pages = {
         "Splash" : <Splash navTriggers={navTriggers}/>,
         "About" : <About/>,
-        "Groundr": <Groundr/>
+        "Groundr": <Groundr/>,
+        "GrindQuest": <GrindQuest/>
     };
     this.state = {activePage: "Splash",
                   menuOpen: false}
@@ -47,6 +51,13 @@ class Site extends Component {
   handleGroundrBtn() {
     this.setState(prevState => ({
       activePage: "Groundr",
+      menuOpen: false
+    })); 
+  }
+  
+  handleGrindQuestBtn() {
+    this.setState(prevState => ({
+      activePage: "GrindQuest",
       menuOpen: false
     })); 
   }
@@ -86,7 +97,7 @@ class Site extends Component {
                       </button>
                     </li>
                     <li>
-                      <button className={"Nav-btn clickable Nav-btn-" + (this.state.activePage==="GrindQuest"?"selected":"unselected")} id="grindquestNav">
+                      <button className={"Nav-btn clickable Nav-btn-" + (this.state.activePage==="GrindQuest"?"selected":"unselected")} id="grindquestNav" onClick={this.handleGrindQuestBtn}>
                         GrindQuest WIP
                       </button>
                     </li>
