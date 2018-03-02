@@ -1,11 +1,12 @@
 {
-  "main.css": "static/css/main.b794eff2.css",
-  "main.css.map": "static/css/main.b794eff2.css.map",
-  "main.js": "static/js/main.876443a1.js",
-  "main.js.map": "static/js/main.876443a1.js.map",
+  "main.css": "static/css/main.89bb4b29.css",
+  "main.css.map": "static/css/main.89bb4b29.css.map",
+  "main.js": "static/js/main.abc9d8e8.js",
+  "main.js.map": "static/js/main.abc9d8e8.js.map",
   "static\\media\\art_latte.jpeg": "static/media/art_latte.c73b1457.jpeg",
   "static\\media\\cortado.jpeg": "static/media/cortado.7e1660f6.jpeg",
+  "static\\media\\flat_white.jpg": "static/media/flat_white.6418512a.jpg",
   "static\\media\\green_shake.jpeg": "static/media/green_shake.b51a80f4.jpeg",
-  "static\\media\\logo.svg": "static/media/logo.5d5d9eef.svg",
-  "static\\media\\menu-icon.svg": "static/media/menu-icon.786c74fa.svg"
+  "static\\media\\logo.svg": "static/media/logo.ee7cd8ed.svg",
+  "static\\media\\menu-icon.svg": "static/media/menu-icon.ba2a92e4.svg"
 }
