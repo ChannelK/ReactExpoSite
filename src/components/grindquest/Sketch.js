@@ -1,4 +1,8 @@
 export default function sketch (p) {
+  let sketchWidth = 512;
+  if(sketchWidth < p.windowWidth) {
+    sketchWidth = p.windowWidth;
+  }
   let ballW = 40;
   let ballH = 40;
   let moveSpeed = 5;

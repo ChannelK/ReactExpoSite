@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import NavButton from './components/NavButton';
 import Splash from './components/Splash';
 import About from './components/About';
 import Groundr from './components/groundr/Groundr';
@@ -25,39 +26,39 @@ class Site extends Component {
       "grindquest":this.handleGrindQuestBtn
     }
     this.pages = {
-        "Splash" : <Splash navTriggers={navTriggers}/>,
-        "About" : <About/>,
-        "Groundr": <Groundr/>,
-        "GrindQuest": <GrindQuest/>
+        "splash" : <Splash navTriggers={navTriggers}/>,
+        "about" : <About/>,
+        "groundr": <Groundr/>,
+        "grindquest": <GrindQuest/>
     };
-    this.state = {activePage: "Splash",
+    this.state = {activePage: "splash",
                   menuOpen: false}
   }
   
   handleAboutBtn() {
     this.setState(prevState => ({
-      activePage: "About",
+      activePage: "about",
       menuOpen: false
     }));
   }
   
   handleSplashBtn() {
     this.setState(prevState => ({
-      activePage: "Splash",
+      activePage: "splash",
       menuOpen: false
     }));      
   }
   
   handleGroundrBtn() {
     this.setState(prevState => ({
-      activePage: "Groundr",
+      activePage: "groundr",
       menuOpen: false
     })); 
   }
   
   handleGrindQuestBtn() {
     this.setState(prevState => ({
-      activePage: "GrindQuest",
+      activePage: "grindquest",
       menuOpen: false
     })); 
   }
@@ -86,31 +87,11 @@ class Site extends Component {
               <div className= {"Nav-btns " + (this.state.menuOpen? "Toggle-open" : "Toggle-close")}>
                 <nav>
                   <ul className="Nav-btn-list">
-                    <li>
-                      <button className={"Nav-btn clickable Nav-btn-" + (this.state.activePage==="Splash"?"selected":"unselected")} id="splashNav" onClick={this.handleSplashBtn}>
-                        Splash
-                      </button>
-                    </li>
-                    <li>
-                      <button className={"Nav-btn clickable Nav-btn-" + (this.state.activePage==="Groundr"?"selected":"unselected")} id="groundrNav" onClick={this.handleGroundrBtn}>
-                        Groundr
-                      </button>
-                    </li>
-                    <li>
-                      <button className={"Nav-btn clickable Nav-btn-" + (this.state.activePage==="GrindQuest"?"selected":"unselected")} id="grindquestNav" onClick={this.handleGrindQuestBtn}>
-                        GrindQuest WIP
-                      </button>
-                    </li>
-                    <li>
-                      <button className={"Nav-btn clickable Nav-btn-" + (this.state.activePage==="Placeholder"?"selected":"unselected")} id="tbdNav">
-                        Placeholder
-                      </button>
-                    </li>
-                    <li>
-                      <button className={"Nav-btn clickable Nav-btn-" + (this.state.activePage==="About"?"selected":"unselected")} id="aboutNav" onClick={this.handleAboutBtn}>
-                        About
-                      </button>
-                    </li>
+                    <li><NavButton activePage={this.state.activePage} navId="splash"     navLabel="Splash"         navLink={this.handleSplashBtn}/>    </li>
+                    <li><NavButton activePage={this.state.activePage} navId="groundr"    navLabel="Groundr"        navLink={this.handleGroundrBtn}/>   </li>
+                    <li><NavButton activePage={this.state.activePage} navId="grindquest" navLabel="GrindQuest WIP" navLink={this.handleGrindQuestBtn}/></li>
+                    <li><NavButton activePage={this.state.activePage} navId="tbd"        navLabel="Placeholder"/>                                      </li>
+                    <li><NavButton activePage={this.state.activePage} navId="about"      navLabel="About"          navLink={this.handleAboutBtn}/>     </li>
                   </ul>
                 </nav>
               </div>
