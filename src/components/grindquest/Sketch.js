@@ -1,6 +1,7 @@
 export default function sketch (p) {
   let sketchWidth = 512;
-  if(sketchWidth < p.windowWidth) {
+  let sketchHeight = 512;
+  if(sketchWidth > p.windowWidth) {
     sketchWidth = p.windowWidth;
   }
   let ballW = 40;
@@ -9,24 +10,47 @@ export default function sketch (p) {
   
   
   let wallL = Math.floor(ballW/2);
-  let wallR = 512-Math.floor(ballW/2);
-  let wallD = 512-Math.floor(ballH/2)-8;
+  let wallR = sketchWidth-Math.floor(ballW/2);
+  let wallD = sketchHeight-Math.floor(ballH/2)-8;
   
   let ballX = Math.floor(ballW/2)+3;
   let ballY = wallD;
   
   let ballVel = 0;
   let ballAcc = 1;
+  let canvas = null;
+  p.mousePressed = p.touchStarted = function() {
+    console.log("Touched at "+p.mouseX+","+p.mouseY);
+    if((p.mouseX >= 0 && p.mouseX<sketchWidth) &&
+    (p.mouseY >= 0 && p.mouseY<sketchHeight)) {
+      var clickedElem = document.elementFromPoint(p.mouseX+canvas.canvas.offsetLeft,p.mouseY+canvas.canvas.offsetTop)
+      console.log("Elem at raw point is "+clickedElem);
+      
+      if(clickedElem.tag === "HTMLCanvasElement")
+        return false;
+      else
+        return true;          
+    } else {
+      return true;
+    }
+  }
+  
+  /*= function() {
+    console.log("Pressed!");
+    return false;
+  }*/
   
   p.setup = function() {
-    p.createCanvas(512,512);
+    canvas = p.createCanvas(sketchWidth,sketchHeight);
+    console.log("Canvas is ");
+    console.log(canvas);
   }
   p.draw = function() {
     var usrU = false;
     var usrD = false;
     var usrL = false;
     var usrR = false;
-    //handle controls
+    //handle keyboard controls
     if(p.keyIsDown(p.UP_ARROW) || p.keyIsDown(87)) {
       usrU = true;
     } else if(p.keyIsDown(p.DOWN_ARROW) || p.keyIsDown(83)) {
@@ -51,6 +75,7 @@ export default function sketch (p) {
         ballX = wallR;
       }
     }
+    //handle mouse controls
     
     if(ballY === wallD) {
       if(usrU) {
