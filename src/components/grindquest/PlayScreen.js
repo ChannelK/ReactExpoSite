@@ -1,8 +1,8 @@
 import GameScreen from './GameScreen';
 
 class PlayScreen extends GameScreen {
-  constructor(p) {
-    super(p);
+  constructor(p,canvasWidth,canvasHeight) {
+    super(p,canvasWidth,canvasHeight);
   }
   
   render() {
