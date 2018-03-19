@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../../Site.css';
-import sketch from './Sketch';
+//import sketch from './Sketch';
 import RunnerGame from './RunnerGame';
 import P5Wrapper from 'react-p5-wrapper';
 
