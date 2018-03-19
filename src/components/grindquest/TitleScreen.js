@@ -2,8 +2,8 @@ import GameScreen from './GameScreen';
 import titleImg from '../../assets/GrindQuest.png';
 
 class TitleScreen extends GameScreen {
-  constructor(p,canvasWidth,canvasHeight,debug) {
-    super(p,canvasWidth,canvasHeight,debug);
+  constructor(p,setCurrentScreen,canvasWidth,canvasHeight,debug) {
+    super(p,setCurrentScreen,canvasWidth,canvasHeight,debug);
     this.DEBUG = true;
     this.titleWidth = this.widthPctI(80);
     this.titleImg = p.loadImage(titleImg);
@@ -21,7 +21,6 @@ class TitleScreen extends GameScreen {
         Math.round(Math.random()*12+10)
       ]);
     }
-    
     this.btnColor = this.p.color(209, 176, 87);
     this.btnTextColor = this.p.color(80, 60, 5);
     this.btnTextSize = this.widthPctI(10);
@@ -29,8 +28,8 @@ class TitleScreen extends GameScreen {
     this.btnPosX = this.widthPctI(50);
     this.btnSpace = this.heightPctI(6);
     this.btnRounding = this.widthPctI(3);
-    this.btns = ['Start','How To Play','About'];
     this.btnBoxMargin = this.heightPctI(1.3);
+    this.btns = ['Start','How To Play','About'];
     //auto calculated from buttons
     this.btnTextboxes = [];
     this.btnBoundingBoxes = [];

@@ -1,10 +1,11 @@
 class GameScreen {
-  constructor(p,canvasWidth,canvasHeight,debug) {
+  constructor(p,setCurrentScreen,canvasWidth,canvasHeight,debug) {
     if(debug === undefined)
       this.DEBUG = false;
     else
       this.DEBUG = debug;
     this.p = p;
+    this.setCurrentScreen = setCurrentScreen;
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.LEVEL = 0x01;

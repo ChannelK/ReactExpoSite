@@ -7,13 +7,26 @@ export default function RunnerGame (p) {
   let sketchHeight = 512;
   let currentScreen = null;
   let screens = null;
-  let pUsrU = 0;
-  let pUsrD = 0;
-  let pUsrL = 0;
-  let pUsrR = 0;
+  //buffered user keyboard controls
+  //ordered: up down left right
+  let usr = [0,0,0,0];
+  let pUsr = [0,0,0,0];
+  //keys to scan for udlr
+  let keyDown = [
+    [p.UP_ARROW,87],
+    [p.DOWN_ARROW,83],
+    [p.LEFT_ARROW,65],
+    [p.RIGHT_ARROW,68]
+  ];
   
   let canvas = null;
   
+  let setCurrentScreen = function(screen) {
+    if(screens[screen])
+      currentScreen = screens[screen];
+    else
+      alert("No such screen named "+screen);
+  }
   let getCurrentScreen = function() {
     return currentScreen;
   }
@@ -44,7 +57,7 @@ export default function RunnerGame (p) {
     console.log("Canvas is ");
     console.log(canvas);
     
-    screens = {'title':new TitleScreen(p,sketchWidth,sketchHeight)};
+    screens = {'title':new TitleScreen(p,setCurrentScreen,sketchWidth,sketchHeight)};
     currentScreen = screens['title'];
   }
   p.mouseMoved = function() {
@@ -52,49 +65,31 @@ export default function RunnerGame (p) {
   }
   
   p.draw = function() {
-    var usrU = 0;
-    var usrD = 0;
-    var usrL = 0;
-    var usrR = 0;
+    var i=0;
+    var j=0;
     //handle keyboard controls
-    //up
-    if(p.keyIsDown(p.UP_ARROW) || p.keyIsDown(87)) {
-      usrU |= LEVEL;
-    }
-    if((pUsrU & LEVEL) !== (usrU & LEVEL)) {
-      usrU |= EDGE;
-    }
-    
-    //down
-    if(p.keyIsDown(p.DOWN_ARROW) || p.keyIsDown(83)) {
-      usrD |= LEVEL;
-    }
-    if((pUsrD & LEVEL) !== (usrD & LEVEL)) {
-      usrD |= EDGE;
+    for(i=0;i<usr.length;i++) {
+      usr[i] = 0;
+      for(j=0;j<keyDown[i].length;j++) {
+        if(p.keyIsDown(keyDown[i][j])) {
+          usr[i] |= LEVEL;
+          break;
+        }
+      }
+      if((pUsr[i] & LEVEL) !== (usr[i] & LEVEL)) {
+        usr[i] |= EDGE;
+      }
     }
     
-    //left
-    if(p.keyIsDown(p.LEFT_ARROW) || p.keyIsDown(65)) {
-      usrL |= LEVEL;
+    for(i=0;i<usr.length;i++) {
+      if(usr[i]) {
+        getCurrentScreen().handleKeyboard(usr[0],usr[1],usr[2],usr[3]);
+        break;
+      }
     }
-    if((pUsrL & LEVEL) !== (usrL & LEVEL)) {
-      usrL |= EDGE;
-    }
-    
-    //right
-    if(p.keyIsDown(p.RIGHT_ARROW) || p.keyIsDown(68)) {
-      usrR |= LEVEL;
-    }
-    if((pUsrR & LEVEL) !== (usrR & LEVEL)) {
-      usrR |= EDGE;
-    }
-    if(usrU || usrD || usrL || usrR)
-      getCurrentScreen().handleKeyboard(usrU,usrD,usrL,usrR);
     getCurrentScreen().render();
-    
-    pUsrU = usrU;
-    pUsrD = usrD;
-    pUsrL = usrL;
-    pUsrR = usrR;
+    for(i=0;i<usr.length;i++) {
+      pUsr[i]=usr[i];
+    }
   }
 };
