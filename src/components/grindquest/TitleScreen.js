@@ -1,5 +1,50 @@
 import GameScreen from './GameScreen';
 import titleImg from '../../assets/GrindQuest.png';
+import CenterElem from './CenterElem';
+
+class MenuButton extends CenterElem {
+  constructor(x,y,width,height,str,boxMargin,rounding,boxColor,font,textColor) {
+    super(x,y,width,height);
+    this.rounding = rounding;
+    
+    this.boxMargin = this.heightPctI(1.3);
+    if(boxMargin)
+      this.boxMargin = boxMargin;
+    
+    this.boxColor = this.p.color(209, 176, 87);
+    if(boxColor)
+      this.boxColor = boxColor;
+  
+    this.buttonText = new class ButtonText extends CenterElem{
+      constructor(x,y,width,height,str,font,textColor) {
+        super(x,y,width,height);
+        this.str = str;
+        this.font = font?font:'Arial';
+        this.textColor = textColor?textColor:this.p.color(0,0,0);
+      }
+      render(p) {
+        p.push();
+        p.textFont(this.font);
+        p.fill(this.textColor);
+        p.textAlign(this.p.CENTER);
+        p.textSize(this.height);
+        this.p.text(this.str,this.leftX,this.topY,this.width);
+        p.pop();
+      }
+    }(x,y,width,height-boxMargin*2,str,font,textColor);
+  }
+  
+  render(p) {
+    p.push();
+    p.fill(this.boxColor);
+    //draw the button backgrounds
+    p.rect(this.leftX,this.topY,this.width,this.height,this.rounding);
+    
+    //draw the button options
+    this.buttonText.render(p);
+    p.pop()
+  }
+}
 
 class TitleScreen extends GameScreen {
   constructor(p,setCurrentScreen,canvasWidth,canvasHeight,debug) {
