@@ -6,41 +6,33 @@ class MenuButton extends CenterElem {
   constructor(x,y,width,height,str,boxMargin,rounding,boxColor,font,textColor) {
     super(x,y,width,height);
     this.rounding = rounding;
-    
-    this.boxMargin = this.heightPctI(1.3);
-    if(boxMargin)
-      this.boxMargin = boxMargin;
-    
-    this.boxColor = this.p.color(209, 176, 87);
-    if(boxColor)
-      this.boxColor = boxColor;
-  
+    this.boxMargin = boxMargin;
+    this.boxColor = boxColor;
     this.buttonText = new class ButtonText extends CenterElem{
       constructor(x,y,width,height,str,font,textColor) {
         super(x,y,width,height);
         this.str = str;
-        this.font = font?font:'Arial';
-        this.textColor = textColor?textColor:this.p.color(0,0,0);
+        this.font = font?font:'Ariel';
+        this.textColor = textColor;
       }
       render(p) {
         p.push();
         p.textFont(this.font);
         p.fill(this.textColor);
-        p.textAlign(this.p.CENTER);
+        p.textAlign(p.CENTER);
         p.textSize(this.height);
-        this.p.text(this.str,this.leftX,this.topY,this.width);
+        p.text(this.str,this.leftX,this.topY,this.width,this.height);
         p.pop();
       }
     }(x,y,width,height-boxMargin*2,str,font,textColor);
   }
   
   render(p) {
+    //console.log("Btn at "+this.x+","+this.y);
     p.push();
     p.fill(this.boxColor);
     //draw the button backgrounds
     p.rect(this.leftX,this.topY,this.width,this.height,this.rounding);
-    
-    //draw the button options
     this.buttonText.render(p);
     p.pop()
   }
@@ -49,7 +41,7 @@ class MenuButton extends CenterElem {
 class TitleScreen extends GameScreen {
   constructor(p,setCurrentScreen,canvasWidth,canvasHeight,debug) {
     super(p,setCurrentScreen,canvasWidth,canvasHeight,debug);
-    this.DEBUG = true;
+    this.DEBUG = false;
     this.titleWidth = this.widthPctI(80);
     this.titleImg = p.loadImage(titleImg);
     
@@ -66,26 +58,33 @@ class TitleScreen extends GameScreen {
         Math.round(Math.random()*12+10)
       ]);
     }
+    //button positioning
+    this.btnPosX = this.widthPctI(50);
+    this.btnPosY = this.heightPctI(50);
+    this.btnWidth = this.widthPctI(65);
+    this.btnHeight = this.widthPctI(10);
+    this.btnSpace = this.heightPctI(6);
+    //button styling
+    this.btnFont = 'Helvetica';
     this.btnColor = this.p.color(209, 176, 87);
     this.btnTextColor = this.p.color(80, 60, 5);
-    this.btnTextSize = this.widthPctI(10);
-    this.btnPosY = this.heightPctI(50);
-    this.btnPosX = this.widthPctI(50);
-    this.btnSpace = this.heightPctI(6);
     this.btnRounding = this.widthPctI(3);
     this.btnBoxMargin = this.heightPctI(1.3);
-    this.btns = ['Start','How To Play','About'];
+    
+    //specify buttons
+    this.btnStrs = ['Start','How To Play','About'];
     //auto calculated from buttons
-    this.btnTextboxes = [];
-    this.btnBoundingBoxes = [];
-    for(i=0;i<this.btns.length;i++) {
-      var width = this.widthPctI(65);
-      var height = this.btnTextSize;
-      var x = this.btnPosX - Math.round(width/2);
-      var y = this.btnPosY + i*(height+this.btnSpace) - Math.round(height/2);
-      this.btnTextboxes.push([x,y,width,height]);
-      this.btnBoundingBoxes.push([x,y-this.btnBoxMargin,width,height+this.btnBoxMargin*2])
+    this.btns = [];
+    for(i=0;i<this.btnStrs.length;i++) {
+      var offset = i*(this.btnHeight+this.btnSpace);
+      //(x,y,width,height,str,boxMargin,rounding,boxColor,font,textColor)
+      this.btns.push(new MenuButton(
+        this.btnPosX, this.btnPosY+offset, this.btnWidth, this.btnHeight,
+        this.btnStrs[i], this.btnBoxMargin, this.btnRounding,
+        this.btnColor, this.btnFont, this.btnTextColor
+      ));
     }
+    
     //state info for the menu cursor
     this.menuCursor = 0;
     this.cursorWidth = this.widthPct (6);
@@ -112,9 +111,7 @@ class TitleScreen extends GameScreen {
     var mX = this.p.mouseX;
     var mY = this.p.mouseY;
     for(var i=0;i<this.btns.length;i++) {
-      var box = this.btnBoundingBoxes[i];
-      if(mX >= box[0] && mX <= box[0]+box[2]
-        && mY >= box[1] && mY <= box[1]+box[3]) {
+      if(this.btns[i].isAtPoint(mX,mY)) {
         this.menuCursor = i;
         break;
       }
@@ -125,7 +122,7 @@ class TitleScreen extends GameScreen {
   handleKeyboard(usrU,usrD,usrL,usrR) {
     if((usrU & this.EDGE) && (usrU & this.LEVEL) && (this.menuCursor-1>=0)){
       this.menuCursor--;
-    } else if((usrD & this.EDGE) && (usrD & this.LEVEL) && (this.menuCursor+1<this.btns.length)) {
+    } else if((usrD & this.EDGE) && (usrD & this.LEVEL) && (this.menuCursor+1<this.btnStrs.length)) {
       this.menuCursor++;
     }
     return true;
@@ -134,14 +131,13 @@ class TitleScreen extends GameScreen {
   render() {
     var i = 0;
     this.p.background(158, 244, 66);
-    
+    //draw dashes
     this.p.fill(this.dashColor);
     this.p.noStroke();
     for(i=0;i<this.dashCt;i++) {
       var dashX = this.dashes[i][0];
       var dashY = this.dashes[i][1];
       var dashV = this.dashes[i][2];
-      //draw the dash
       this.p.rect(dashX-Math.round(this.dashWidth/2), 
         dashY-Math.round(this.dashHeight/2), 
         this.dashWidth, this.dashHeight
@@ -155,6 +151,7 @@ class TitleScreen extends GameScreen {
       } else
         this.dashes[i][1] += dashV;
     }
+    
     //draw the title
     this.p.image(this.titleImg,
       this.widthPctI(50)-this.titleWidth/2, 
@@ -163,27 +160,17 @@ class TitleScreen extends GameScreen {
       this.titleImg.height/this.titleImg.width*this.titleWidth
     );
     
-    this.p.fill(this.btnColor);
-    //draw the button backgrounds
+    
+    //draw the buttons
     for(i=0;i<this.btns.length;i++) {
-      var backBox = this.btnBoundingBoxes[i];
-      this.p.rect(backBox[0],backBox[1],backBox[2],backBox[3],this.btnRounding);
-    }
-    //draw the button options
-    this.p.textFont('Arial');
-    this.p.fill(this.btnTextColor);
-    this.p.textAlign(this.p.CENTER);
-    this.p.textSize(this.btnTextSize);
-    for(i=0;i<this.btns.length;i++) {
-      var btnBox = this.btnTextboxes[i];
-      this.p.text(this.btns[i],btnBox[0],btnBox[1],btnBox[2],btnBox[3]);
+      this.btns[i].render(this.p);
     }
     
     //draw the cursor
     this.p.fill(this.cursorColor);
-    var cursorBox = this.btnTextboxes[this.menuCursor];
-    var cursorX = cursorBox[0] - this.cursorMargin;
-    var cursorY = Math.round(cursorBox[1] + cursorBox[3]/2);
+    var cursorBox = this.btns[this.menuCursor];
+    var cursorX = cursorBox.leftX - this.cursorMargin;
+    var cursorY = Math.round(cursorBox.topY + cursorBox.height/2);
     this.p.ellipse(cursorX,cursorY,this.cursorWidth,this.cursorHeight);
     
     //draw debug
