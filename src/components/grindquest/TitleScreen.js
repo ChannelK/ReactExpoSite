@@ -30,11 +30,88 @@ class MenuButton extends CenterElem {
   render(p) {
     //console.log("Btn at "+this.x+","+this.y);
     p.push();
+    p.noStroke();
     p.fill(this.boxColor);
     //draw the button backgrounds
     p.rect(this.leftX,this.topY,this.width,this.height,this.rounding);
     this.buttonText.render(p);
     p.pop()
+  }
+}
+
+class DashSystem {
+  constructor(dashCount,xRange,yRange,velRange,widthRange,height,dashColor) {
+    
+    if(Array.isArray(xRange)) {
+      this.xMin = Math.min(xRange[0],xRange[1]);
+      this.xMax = Math.max(xRange[0],xRange[1]);
+    } else {
+      this.xMin = 0;
+      this.xMax = xRange;
+    }
+    if(Array.isArray(yRange)) {
+      this.yMin = Math.min(yRange[0],yRange[1]);
+      this.yMax = Math.max(yRange[0],yRange[1]);
+    } else {
+      this.yMin = -Math.round(height/2);
+      this.yMax = yRange;
+    }
+    this.vMin = Math.min(velRange[0],velRange[1]);
+    this.vMax = Math.max(velRange[0],velRange[1]);
+    this.wMin = Math.min(widthRange[0],widthRange[1]);
+    this.wMax = Math.max(widthRange[0],widthRange[1]);
+    this.height = height;
+    this.dashColor = dashColor;
+    
+    //auto calc from params
+    //dash objs keep their position, size and velocity
+    this.dashes = [];
+    for(var i = 0;i < dashCount;i++) {
+      var xPos =  Math.round(this.xMin + Math.random() * (this.xMax-this.xMin));
+      var yPos =  Math.round(this.yMin + Math.random() * (this.yMax-this.yMin));
+      var speedPct = Math.random();
+      var yVel  = Math.round(this.vMin + speedPct * (this.vMax-this.vMin));
+      var width = Math.round(this.wMin + speedPct * (this.wMax-this.wMin));
+      //console.log("New Dash ("+xPos+","+yPos+","+width+","+this.height+","+yVel+")");
+            
+      this.dashes.push(
+        new class Dash extends CenterElem{
+          constructor(x,y,width,height,yVel) {
+            super(x,y,width,height);
+            this.yVel = yVel;
+          }
+          get nextPos() {return this.y+this.yVel};
+          move(){this.y = this.y+this.yVel;}
+          render(p) {
+            p.rect(this.x,this.y,this.width,this.height);
+          }
+        }(xPos,yPos,width,this.height,yVel)
+      );
+    }
+  }
+  
+  render(p) {
+    p.push();
+    p.fill(this.dashColor);
+    p.noStroke();
+    
+    p.rectMode(p.CENTER);
+    for(var i = 0;i < this.dashes.length;i++) {
+      //render dash
+      this.dashes[i].render(p);
+      //decide next pos
+      if(this.dashes[i].nextPos >= this.yMax) {
+        var speedPct = Math.random();
+        this.dashes[i].yVel  = Math.round(this.vMin + speedPct      * (this.vMax-this.vMin));
+        this.dashes[i].width = Math.round(this.wMin + speedPct      * (this.wMax-this.wMin));
+        
+        this.dashes[i].x = Math.round(this.xMin + Math.random() * (this.xMax-this.xMin));
+        this.dashes[i].y = this.yMin;
+      } else {
+        this.dashes[i].move();
+      }
+    }
+    p.pop();
   }
 }
 
@@ -49,22 +126,17 @@ class TitleScreen extends GameScreen {
     
     
     //dash dimensions
-    this.dashWidth = 3;
-    this.dashHeight = this.heightPctI(15);
+    var dashVelRange = [4,20];
+    var dashWidthRange = [2,6];
+    var dashHeight = this.heightPctI(15);
     //dash styling
-    this.dashColor = this.p.color(70,130,40);
+    var dashColor = this.p.color(70,130,40);
     //specify dashes
-    this.dashCt = Math.round(this.canvasWidth/6);
-    this.dashes = [];
-    
-    //the grouping goes xpos,ypox,yvelocity
-    //the velocity is currently linked to framerate
-    for(var i=0;i<this.dashCt;i++) {
-      this.dashes.push([Math.round(Math.random()*canvasWidth),
-        Math.round(Math.random()*canvasHeight),
-        Math.round(Math.random()*12+10)
-      ]);
-    }
+    var dashCt = Math.round(this.canvasWidth/6);
+    //var dashCt = 1;
+    this.dashSystem = new DashSystem(dashCt,
+      this.canvasWidth, Math.round(this.canvasHeight + dashHeight/2),
+      dashVelRange, dashWidthRange,dashHeight,dashColor);
     
     //button positioning
     this.btnPosX = this.widthPctI(50);
@@ -83,7 +155,7 @@ class TitleScreen extends GameScreen {
     
     //auto calculated from buttons
     this.btns = [];
-    for(i=0;i<this.btnStrs.length;i++) {
+    for(var i=0;i<this.btnStrs.length;i++) {
       var offset = i*(this.btnHeight+this.btnSpace);
       //(x,y,width,height,str,boxMargin,rounding,boxColor,font,textColor)
       this.btns.push(new MenuButton(
@@ -139,27 +211,9 @@ class TitleScreen extends GameScreen {
   
   render() {
     var i = 0;
-    this.p.background(158, 244, 66);
+    this.p.background( 158, 244, 66);
     //draw dashes
-    this.p.fill(this.dashColor);
-    this.p.noStroke();
-    for(i=0;i<this.dashCt;i++) {
-      var dashX = this.dashes[i][0];
-      var dashY = this.dashes[i][1];
-      var dashV = this.dashes[i][2];
-      this.p.rect(dashX-Math.round(this.dashWidth/2), 
-        dashY-Math.round(this.dashHeight/2), 
-        this.dashWidth, this.dashHeight
-      );
-      
-      //if the dash is off the screen, recycle it
-      if(dashY-Math.round(this.dashHeight/2)+dashV >= this.canvasHeight) {
-        this.dashes[i][0] = Math.round(Math.random()*this.canvasWidth);
-        this.dashes[i][1] = Math.round(-this.dashHeight/2);
-        this.dashes[i][2] = Math.round(Math.random()*20+5);
-      } else
-        this.dashes[i][1] += dashV;
-    }
+    this.dashSystem.render(this.p);
     
     //draw the title
     this.p.image(this.titleImg,
@@ -176,6 +230,7 @@ class TitleScreen extends GameScreen {
     }
     
     //draw the cursor
+    this.p.noStroke();
     this.p.fill(this.cursorColor);
     var cursorBox = this.btns[this.menuCursor];
     var cursorX = cursorBox.leftX - this.cursorMargin;
