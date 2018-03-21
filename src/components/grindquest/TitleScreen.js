@@ -42,14 +42,21 @@ class TitleScreen extends GameScreen {
   constructor(p,setCurrentScreen,canvasWidth,canvasHeight,debug) {
     super(p,setCurrentScreen,canvasWidth,canvasHeight,debug);
     this.DEBUG = false;
+    
+    //title positioning
     this.titleWidth = this.widthPctI(80);
     this.titleImg = p.loadImage(titleImg);
     
-    this.dashColor = this.p.color(70,130,40);
-    this.dashCt = Math.round(this.canvasWidth/6);
+    
+    //dash dimensions
     this.dashWidth = 3;
     this.dashHeight = this.heightPctI(15);
+    //dash styling
+    this.dashColor = this.p.color(70,130,40);
+    //specify dashes
+    this.dashCt = Math.round(this.canvasWidth/6);
     this.dashes = [];
+    
     //the grouping goes xpos,ypox,yvelocity
     //the velocity is currently linked to framerate
     for(var i=0;i<this.dashCt;i++) {
@@ -58,6 +65,7 @@ class TitleScreen extends GameScreen {
         Math.round(Math.random()*12+10)
       ]);
     }
+    
     //button positioning
     this.btnPosX = this.widthPctI(50);
     this.btnPosY = this.heightPctI(50);
@@ -70,9 +78,9 @@ class TitleScreen extends GameScreen {
     this.btnTextColor = this.p.color(80, 60, 5);
     this.btnRounding = this.widthPctI(3);
     this.btnBoxMargin = this.heightPctI(1.3);
-    
     //specify buttons
     this.btnStrs = ['Start','How To Play','About'];
+    
     //auto calculated from buttons
     this.btns = [];
     for(i=0;i<this.btnStrs.length;i++) {
@@ -85,12 +93,14 @@ class TitleScreen extends GameScreen {
       ));
     }
     
-    //state info for the menu cursor
-    this.menuCursor = 0;
+    //cursor dimensions and margin from box
     this.cursorWidth = this.widthPct (6);
     this.cursorHeight = this.widthPct(6);
     this.cursorMargin = this.widthPctI(6);
+    //cursor styling
     this.cursorColor = this.p.color(256,80,80);
+    //state info for the menu cursor
+    this.menuCursor = 0;
     
     //debug point
     this.dbpc = this.p.color(0,0,256);
@@ -108,8 +118,7 @@ class TitleScreen extends GameScreen {
   }
   
   handleMouseMove() {
-    var mX = this.p.mouseX;
-    var mY = this.p.mouseY;
+    var mX = this.p.mouseX, mY = this.p.mouseY;
     for(var i=0;i<this.btns.length;i++) {
       if(this.btns[i].isAtPoint(mX,mY)) {
         this.menuCursor = i;

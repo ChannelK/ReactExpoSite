@@ -31,10 +31,18 @@ export default function RunnerGame (p) {
     return currentScreen;
   }
   p.mousePressed = p.touchStarted = function() {
-    console.log("Touched at "+p.mouseX+","+p.mouseY);
+    //console.log("Touched at "+p.mouseX+","+p.mouseY);
     if((p.mouseX >= 0 && p.mouseX<sketchWidth) &&
     (p.mouseY >= 0 && p.mouseY<sketchHeight)) {
-      var clickedElem = document.elementFromPoint(p.mouseX+canvas.canvas.offsetLeft,p.mouseY+canvas.canvas.offsetTop)
+      //taken from https://stackoverflow.com/questions/3464876/javascript-get-window-x-y-position-for-scroll
+      var top  = window.pageYOffset || document.documentElement.scrollTop,
+        left = window.pageXOffset || document.documentElement.scrollLeft;
+      
+      var adjustX = p.mouseX + canvas.canvas.offsetLeft - left,
+        adjustY =   p.mouseY + canvas.canvas.offsetTop - top;
+      //console.log("AdjustX mouse:"+p.mouseX+", canvasOffset:"+canvas.canvas.offsetLeft+", window:"+left+" = "+adjustX);
+      //console.log("AdjustY mouse:"+p.mouseY+", canvasOffset:"+canvas.canvas.offsetTop+ ", window:"+top+ " = "+adjustY);
+      var clickedElem = document.elementFromPoint(adjustX,adjustY);
       //console.log("Elem at raw point is "+clickedElem);
       //console.log(clickedElem)
       
@@ -54,8 +62,8 @@ export default function RunnerGame (p) {
       sketchWidth = p.windowWidth;
     }
     canvas = p.createCanvas(sketchWidth,sketchHeight);
-    console.log("Canvas is ");
-    console.log(canvas);
+    //console.log("Canvas is ");
+    //console.log(canvas);
     
     screens = {'title':new TitleScreen(p,setCurrentScreen,sketchWidth,sketchHeight)};
     currentScreen = screens['title'];
