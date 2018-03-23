@@ -42,9 +42,12 @@ class TitleScreen extends GameScreen {
     this.btnStrs = ['Start','How To Play','About'];
     //specify actions
     var startCallback = function() {this.setCurrentScreen('play');};
+    var howToCallback = function() {this.setCurrentScreen('howto');};
     startCallback = startCallback.bind(this);
+    howToCallback = howToCallback.bind(this);
     this.btnActions = {
-      'Start':startCallback};
+      'Start':startCallback,
+      'How To Play':howToCallback};
     //auto calculated from buttons
     this.btns = [];
     for(var i=0;i<this.btnStrs.length;i++) {

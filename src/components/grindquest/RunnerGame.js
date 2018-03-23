@@ -1,5 +1,6 @@
 import TitleScreen from './TitleScreen';
 import PlayScreen from './PlayScreen';
+import HowToScreen from './HowToScreen';
 
 export default function RunnerGame (p) {
   let LEVEL = 0x01;
@@ -68,7 +69,8 @@ export default function RunnerGame (p) {
     
     screens = {
       'title':new TitleScreen(p,setCurrentScreen,sketchWidth,sketchHeight),
-      'play':new PlayScreen(p,setCurrentScreen,sketchWidth,sketchHeight)};
+      'play':new PlayScreen(p,setCurrentScreen,sketchWidth,sketchHeight),
+      'howto':new HowToScreen(p,setCurrentScreen,sketchWidth,sketchHeight)};
     setCurrentScreen('title');
     //currentScreen = screens['title'];
   }
