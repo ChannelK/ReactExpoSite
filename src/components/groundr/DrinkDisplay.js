@@ -52,13 +52,19 @@ class DrinkDisplay extends Component {
     return rows;
   }
   
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.imgsrc !== this.props.imgsrc) {
+      this.setState({imgReady: false});
+    }
+  }
+  
   render() {
     return (    
       <div className="Drink-root">
         <h1 className={"Drink-title"}>{this.props.name}</h1>
         <p className="Drink-desc">{this.props.desc}</p>
           
-        <img className={"Scale-pic"+(this.state.imgReady?"":"hidden")}
+        <img className={"Scale-pic "+(this.state.imgReady?"":"hidden")}
           src={require("../../assets/"+this.props.imgsrc)}
           onLoad={this.handleImageLoaded.bind(this)}
           alt="Coffee Cup"
