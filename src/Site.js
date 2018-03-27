@@ -19,18 +19,12 @@ class Site extends Component {
     this.handleGroundrBtn = this.handleGroundrBtn.bind(this);
     this.handleGrindQuestBtn = this.handleGrindQuestBtn.bind(this);
     
-    const navTriggers = {
+    this.navTriggers = {
       "about":this.handleAboutBtn,
       "splash":this.handleSplashBtn,
       "groundr":this.handleGroundrBtn,
       "grindquest":this.handleGrindQuestBtn
     }
-    this.pages = {
-        "splash" : <Splash navTriggers={navTriggers}/>,
-        "about" : <About/>,
-        "groundr": <Groundr/>,
-        "grindquest": <GrindQuest/>
-    };
     this.state = {activePage: "splash",
                   menuOpen: false}
   }
@@ -69,9 +63,18 @@ class Site extends Component {
       menuOpen: !this.state.menuOpen
     })); 
   }
+  renderPage(pageName) {
+    if (pageName==="splash")
+      return <Splash navTriggers={this.navTriggers}/>;
+    else if (pageName === "about")
+      return <About/>;
+    else if (pageName === "groundr") 
+      return <Groundr/>;
+    else if (pageName === "grindquest") 
+      return <GrindQuest/>;
+  }
   
   render() {
-    var content = this.pages[this.state.activePage];
     return (
       <div className="Site">
         <header className="Site-header">
@@ -98,7 +101,7 @@ class Site extends Component {
             </div>
           </div>
         </header>
-        {content}
+        {this.renderPage(this.state.activePage)}
       </div>
     );
   }

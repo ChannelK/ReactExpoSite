@@ -12,13 +12,12 @@ class TitleScreen extends GameScreen {
     this.titleWidth = this.widthPctI(80);
     this.titleImg = p.loadImage(titleImg);
     
-    
     //dash dimensions
     var dashVelRange = [4,20];
     var dashWidthRange = [2,6];
     var dashHeight = this.heightPctI(15);
     //dash styling
-    var dashColor = this.p.color(70,130,40);
+    var dashColor = 'rgb(70,130,40)';
     //specify dashes
     var dashCt = Math.round(this.canvasWidth/6);
     //var dashCt = 1;
@@ -34,8 +33,8 @@ class TitleScreen extends GameScreen {
     this.btnSpace = this.heightPctI(6);
     //button styling
     this.btnFont = 'Helvetica';
-    this.btnColor = this.p.color(209, 176, 87);
-    this.btnTextColor = this.p.color(80, 60, 5);
+    this.btnColor = 'rgb(209, 176, 87)';
+    this.btnTextColor = 'rgb(80, 60, 5)';
     this.btnRounding = this.widthPctI(3);
     this.btnBoxMargin = this.heightPctI(1.3);
     //specify buttons
@@ -65,12 +64,13 @@ class TitleScreen extends GameScreen {
     this.cursorHeight = this.widthPct(6);
     this.cursorMargin = this.widthPctI(6);
     //cursor styling
-    this.cursorColor = this.p.color(256,80,80);
+    //this.cursorColor = this.p.color(256,80,80);
+    this.cursorColor = 'rgb(256,80,80)';
     //state info for the menu cursor
     this.menuCursor = 0;
     
     //debug point
-    this.dbpc = this.p.color(0,0,256);
+    this.dbpc = 'rgb(0,0,256)';
     this.dbpx = 4;
     this.dbpy = 4;
     this.dbpw = 4;
@@ -121,6 +121,7 @@ class TitleScreen extends GameScreen {
     this.dashSystem.render(this.p);
     
     //draw the title
+    //as of p5 v0.6.0 this will give a false error
     this.p.image(this.titleImg,
       this.widthPctI(50)-this.titleWidth/2, 
       this.heightPctI(10),

@@ -41,7 +41,7 @@ class DashSystem {
             super(x,y,width,height);
             this.yVel = yVel;
           }
-          get nextPos() {return this.y+this.yVel};
+          get nextPos() {return this.y+this.yVel;}
           move(){this.y = this.y+this.yVel;}
           render(p) {
             p.rect(this.x,this.y,this.width,this.height);
