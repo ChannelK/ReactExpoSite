@@ -1,5 +1,9 @@
 /*#634987 color theme*/
 
+.hidden {
+  display: none;
+}
+
 .Site {
   text-align: center;
   min-width: 350px;
@@ -191,8 +195,9 @@
 
 
 .About-text {
+  max-width: 70%;
+  margin: auto auto 100px auto;
   text-align: center;
-  margin-bottom: 100px;
 }
 
 .App-grid-container {

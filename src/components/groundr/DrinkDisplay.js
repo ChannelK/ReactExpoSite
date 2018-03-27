@@ -3,7 +3,15 @@ import '../../Site.css';
 import drinks from '../../drinks.json';
 
 class DrinkDisplay extends Component {
-
+  constructor(props) {
+    super(props);
+    this.state = {imgReady: false};
+  }
+  
+  handleImageLoaded() {
+    this.setState({ imgReady: true });
+  }
+  
   getIngredLi(ings) {
     var lis = [];
     for(var i = 0;i < ings.length;i++) {
@@ -45,11 +53,21 @@ class DrinkDisplay extends Component {
   }
   
   render() {
-    return (
+    return (    
       <div className="Drink-root">
-        <h1 className="Drink-title">{this.props.name}</h1>
+        <h1 className={"Drink-title"}>{this.props.name}</h1>
         <p className="Drink-desc">{this.props.desc}</p>
-        <img className="Scale-pic" src={require("../../assets/"+this.props.imgsrc)} alt="Coffee Cup"/>
+          
+        <img className={"Scale-pic"+(this.state.imgReady?"":"hidden")}
+          src={require("../../assets/"+this.props.imgsrc)}
+          onLoad={this.handleImageLoaded.bind(this)}
+          alt="Coffee Cup"
+        />
+          
+        <img className={"Scale-pic "+(this.state.imgReady?"hidden":"")}
+          src={this.props.bufferImg}
+          alt="Loading..."/>
+          
         <table className="Drink-ingredients">
           <tbody>
             {this.getTableRows(this.props.ingredients)}

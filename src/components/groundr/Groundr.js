@@ -4,6 +4,7 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import drinks from '../../drinks.json';
 import DrinkDisplay from './DrinkDisplay';
+import bufferImg from '../../assets/LoadingDots.gif';
 
 class Groundr extends Component {
   constructor(props) {
@@ -84,6 +85,7 @@ class Groundr extends Component {
         imgsrc={submittedRecipe.image}
         ingredients={submittedRecipe.ingredients}
         directions={submittedRecipe.directions}
+        bufferImg={bufferImg}
       />;
     } else {
       display = <div className="Blank-drink"><span>Select a drink from the list.</span></div>;
