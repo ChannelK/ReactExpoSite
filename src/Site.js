@@ -90,10 +90,9 @@ class Site extends Component {
               <div className= {"Nav-btns " + (this.state.menuOpen? "Toggle-open" : "Toggle-close")}>
                 <nav>
                   <ul className="Nav-btn-list">
-                    <li><NavButton activePage={this.state.activePage} navId="splash"     navLabel="Splash"         navLink={this.handleSplashBtn}/>    </li>
+                    <li><NavButton activePage={this.state.activePage} navId="splash"     navLabel="Home"         navLink={this.handleSplashBtn}/>    </li>
                     <li><NavButton activePage={this.state.activePage} navId="groundr"    navLabel="Groundr"        navLink={this.handleGroundrBtn}/>   </li>
                     <li><NavButton activePage={this.state.activePage} navId="grindquest" navLabel="GrindQuest WIP" navLink={this.handleGrindQuestBtn}/></li>
-                    <li><NavButton activePage={this.state.activePage} navId="tbd"        navLabel="Placeholder"/>                                      </li>
                     <li><NavButton activePage={this.state.activePage} navId="about"      navLabel="About"          navLink={this.handleAboutBtn}/>     </li>
                   </ul>
                 </nav>

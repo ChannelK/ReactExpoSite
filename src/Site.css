@@ -213,11 +213,12 @@
 }
 
 .App-Icon {
-  max-height: 300px;
+  height: 300px;
 }
 
 .App-selector {
-  width: 80%;
+  max-width: 80%;
+  min-width: 300px;
   height: 80%;
   margin: auto;
 }

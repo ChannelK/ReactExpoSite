@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import '../Site.css';
 import LaunchIcon from './LaunchIcon';
-import MugIcon from '../logo.svg';
+import MugIcon from '../assets/FancyG.png';
+import BeanIcon from '../assets/Bean.png';
 
 class Splash extends Component {
   
@@ -14,13 +15,10 @@ class Splash extends Component {
         </p>
         <div className="App-grid-container">
             <div className="App-grid-item">
-                <LaunchIcon icon={MugIcon} navTrigger={this.props.navTriggers.groundr} label="Groundr"/>
+                <LaunchIcon icon={BeanIcon} navTrigger={this.props.navTriggers.groundr} label="Groundr"/>
             </div>
             <div className="App-grid-item">
-                <div className="App-selector"> Placeholder 1</div>
-            </div>
-            <div className="App-grid-item">
-                <div className="App-selector"> Placeholder 2</div>
+                <LaunchIcon icon={MugIcon} navTrigger={this.props.navTriggers.grindquest} label="GrindQuest"/>
             </div>
         </div>
       </div>
