@@ -22,7 +22,6 @@ class TextBox extends CenterElem {
         p.textAlign(p.CENTER);
         p.textSize(this.textSize);
         p.text(this.str,this.x,this.y,this.width,this.height);
-        p.ellipse(this.x,this.y,3);
         p.pop();
       }
     }(x,y,width-boxMargin*2,height-boxMargin*2,str,textSize,font,textColor);
