@@ -42,11 +42,15 @@ class TitleScreen extends GameScreen {
     //specify actions
     var startCallback = function() {this.setCurrentScreen('play');};
     var howToCallback = function() {this.setCurrentScreen('howto');};
+    var aboutCallback = function() {this.setCurrentScreen('about');};
     startCallback = startCallback.bind(this);
     howToCallback = howToCallback.bind(this);
+    aboutCallback = aboutCallback.bind(this);
     this.btnActions = {
       'Start':startCallback,
-      'How To Play':howToCallback};
+      'How To Play':howToCallback,
+      'About':aboutCallback
+    };
     //auto calculated from buttons
     this.btns = [];
     for(var i=0;i<this.btnStrs.length;i++) {
@@ -105,11 +109,18 @@ class TitleScreen extends GameScreen {
     return true;
   }
   
-  handleKeyboard(usrU,usrD,usrL,usrR) {
-    if((usrU & this.EDGE) && (usrU & this.LEVEL) && (this.menuCursor-1>=0)){
+  handleKeyboard(usrU,usrD,usrL,usrR,usrEnter,usrEsc) {
+    if(this.keyPress(usrU) && (this.menuCursor-1>=0)){
       this.menuCursor--;
-    } else if((usrD & this.EDGE) && (usrD & this.LEVEL) && (this.menuCursor+1<this.btnStrs.length)) {
+    } else if(this.keyPress(usrD) && (this.menuCursor+1<this.btnStrs.length)) {
       this.menuCursor++;
+    }
+    
+    if(this.keyRelease(usrEnter)) {
+      var selectedStr = this.btnStrs[this.menuCursor];
+      if(this.btnActions[selectedStr]) {
+          this.btnActions[selectedStr]();
+      }
     }
     return true;
   }

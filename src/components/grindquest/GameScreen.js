@@ -11,7 +11,16 @@ class GameScreen {
     this.LEVEL = 0x01;
     this.EDGE = 0x02;
   }
-  
+  //for keyPress scalability
+  keyPress(usrIn) {
+    return ((usrIn & this.EDGE) && (usrIn & this.LEVEL));
+  }
+  keyHeld(usrIn) {
+    return (!(usrIn & this.EDGE) && (usrIn & this.LEVEL));
+  }
+  keyRelease(usrIn) {
+    return ((usrIn & this.EDGE) && !(usrIn & this.LEVEL));
+  }
   //for convenience of scalability
   widthPct(pct) {
     return this.canvasWidth/100.0*pct;

@@ -1,6 +1,7 @@
 import TitleScreen from './TitleScreen';
 import PlayScreen from './PlayScreen';
 import HowToScreen from './HowToScreen';
+import AboutScreen from './AboutScreen';
 
 export default function RunnerGame (p) {
   let LEVEL = 0x01;
@@ -10,15 +11,17 @@ export default function RunnerGame (p) {
   let currentScreen = null;
   let screens = null;
   //buffered user keyboard controls
-  //ordered: up down left right
-  let usr = [0,0,0,0];
-  let pUsr = [0,0,0,0];
+  //ordered: up down left right enter esc
+  let usr = [0,0,0,0,0,0];
+  let pUsr = [0,0,0,0,0,0];
   //keys to scan for udlr
   let keyDown = [
     [p.UP_ARROW,87],
     [p.DOWN_ARROW,83],
     [p.LEFT_ARROW,65],
-    [p.RIGHT_ARROW,68]
+    [p.RIGHT_ARROW,68],
+    [p.ENTER,69],
+    [27]
   ];
   
   let canvas = null;
@@ -70,7 +73,8 @@ export default function RunnerGame (p) {
     screens = {
       'title':new TitleScreen(p,setCurrentScreen,sketchWidth,sketchHeight),
       'play':new PlayScreen(p,setCurrentScreen,sketchWidth,sketchHeight),
-      'howto':new HowToScreen(p,setCurrentScreen,sketchWidth,sketchHeight)};
+      'howto':new HowToScreen(p,setCurrentScreen,sketchWidth,sketchHeight),
+      'about':new AboutScreen(p,setCurrentScreen,sketchWidth,sketchHeight)};
     setCurrentScreen('title');
     //currentScreen = screens['title'];
   }
@@ -95,9 +99,10 @@ export default function RunnerGame (p) {
       }
     }
     
+    
     for(i=0;i<usr.length;i++) {
       if(usr[i]) {
-        getCurrentScreen().handleKeyboard(usr[0],usr[1],usr[2],usr[3]);
+        getCurrentScreen().handleKeyboard(usr[0],usr[1],usr[2],usr[3],usr[4],usr[5]);
         break;
       }
     }

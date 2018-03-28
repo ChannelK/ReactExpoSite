@@ -2,7 +2,7 @@ import GameScreen from './GameScreen';
 import MenuButton from './MenuButton';
 import TextBox from './TextBox';
 
-class HowToScreen extends GameScreen {
+class AboutScreen extends GameScreen {
   constructor(p,setCurrentScreen,canvasWidth,canvasHeight,debug) {
     super(p,setCurrentScreen,canvasWidth,canvasHeight,debug);
     //button position and size
@@ -31,7 +31,7 @@ class HowToScreen extends GameScreen {
     this.textBackgroundColor = this.p.color(209, 176, 87);
     this.textColor = this.p.color(80, 60, 5);
     this.textRounding = this.widthPctI(0.5);
-    this.textBoxMargin = this.heightPctI(0.5);
+    this.textBoxMargin = this.heightPctI(2);
     //cursor styling
     this.cursorColor = 'rgb(256,80,80)';
     //state info for the menu cursor
@@ -39,12 +39,8 @@ class HowToScreen extends GameScreen {
     //specify button
     this.btnStr = 'Back';
     //specify text
-    this.textStr = "Collect the brown coffee beans coming towards you while avoiding green coffee beans.\n\n"+
-      "Move between the three lanes by going left or right.\n\n"+
-      "Go left using 'A', left arrow, or clicking on the left.\n"+
-      "Go right using 'D', right arrow, or clicking on the right.\n\n"+
-      "The game ends when you have collected enough coffee beans.\n"+
-      "Press esc to pause the game.";
+    this.textStr = "GrindQuest by Kennith Chan\n\n" + 
+      "Made with p5.js v0.6.0";
     //specify actions
     var backCallback = function() {this.setCurrentScreen('title');};
     this.backCallback = backCallback.bind(this);
@@ -95,4 +91,4 @@ class HowToScreen extends GameScreen {
     this.p.ellipse(cursorX,cursorY,this.cursorWidth,this.cursorHeight);
   }
 }
-export default HowToScreen;
+export default AboutScreen;
