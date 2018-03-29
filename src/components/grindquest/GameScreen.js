@@ -1,9 +1,15 @@
 class GameScreen {
-  constructor(p,setCurrentScreen,canvasWidth,canvasHeight,debug) {
+  constructor(p,setCurrentScreen,canvasWidth,canvasHeight,targetFrameRate,debug) {
+    if(targetFrameRate === undefined)
+      this.targetFrameRate = 30;
+    else
+      this.targetFrameRate = targetFrameRate;
+    
     if(debug === undefined)
       this.DEBUG = false;
     else
       this.DEBUG = debug;
+  
     this.p = p;
     this.setCurrentScreen = setCurrentScreen;
     this.canvasWidth = canvasWidth;

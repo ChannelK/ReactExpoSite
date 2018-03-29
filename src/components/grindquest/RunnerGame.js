@@ -62,7 +62,8 @@ export default function RunnerGame (p) {
   }
   
   p.setup = function() {
-    p.frameRate(30);
+    let targetFrameRate = 30;
+    p.frameRate(targetFrameRate);
     if(sketchWidth > p.windowWidth) {
       sketchWidth = p.windowWidth;
     }
@@ -71,10 +72,10 @@ export default function RunnerGame (p) {
     //console.log(canvas);
     
     screens = {
-      'title':new TitleScreen(p,setCurrentScreen,sketchWidth,sketchHeight),
-      'play':new PlayScreen(p,setCurrentScreen,sketchWidth,sketchHeight),
-      'howto':new HowToScreen(p,setCurrentScreen,sketchWidth,sketchHeight),
-      'about':new AboutScreen(p,setCurrentScreen,sketchWidth,sketchHeight)};
+      'title':new TitleScreen(p,setCurrentScreen,sketchWidth,sketchHeight,targetFrameRate),
+      'play':new PlayScreen(p,setCurrentScreen,sketchWidth,sketchHeight,targetFrameRate),
+      'howto':new HowToScreen(p,setCurrentScreen,sketchWidth,sketchHeight,targetFrameRate),
+      'about':new AboutScreen(p,setCurrentScreen,sketchWidth,sketchHeight,targetFrameRate)};
     setCurrentScreen('title');
     //currentScreen = screens['title'];
   }

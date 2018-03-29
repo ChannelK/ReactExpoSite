@@ -27,6 +27,13 @@ class TextBox extends CenterElem {
     }(x,y,width-boxMargin*2,height-boxMargin*2,str,textSize,font,textColor);
   }
   
+  set text(newText) {
+    this.innerText.str = newText;
+  }
+  get text() {
+    return this.innerText.str;
+  }
+  
   render(p) {
     p.push();
     p.noStroke();
