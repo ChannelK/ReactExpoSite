@@ -179,8 +179,9 @@ function changeGameState(newState) {
     return;
 
   //re-set menu visibility
-  for(let i = 0;i < this.menuBtnStrs.length;i++) {
-    this.elemVisible["menubtn_"+this.menuBtnStrs[i]] = false;
+  for(let i = 0;i < this.menuBtnElems.length;i++) {
+    let btnElem = this.menuBtnElems[i];
+    this.elemVisible[btnElem] = false;
   }
   let menuVisible = this.state2DefaultMenuOpen[newState];
   if(menuVisible) {
@@ -188,7 +189,7 @@ function changeGameState(newState) {
     this.elemVisible["menuText"] = true;
     let menuBtnVisible = this.state2Btns[newState];
     for(let i = 0;i < menuBtnVisible.length;i++) {
-      this.elemVisible["menubtn_"+menuBtnVisible[i]] = true;
+      this.elemVisible[menuBtnVisible[i]] = true;
     }
   } else {
     this.elemVisible["menuOverlay"] = false;
@@ -283,9 +284,16 @@ class PlayScreen extends GameScreen {
     let menuOverlayColor = this.p.color(20,20,20,150);
     
     //list all menu buttons
-    this.menuBtnStrs = ['Start','Back','Resume','Reset','Quit'];
+    this.menuBtnElems = ['menubtn_start','menubtn_back','menubtn_resume','menubtn_reset','menubtn_quit'];
+    this.menuBtnStrs = {
+      'menubtn_start':'Start',
+      'menubtn_back':'Back',
+      'menubtn_resume':'Resume',
+      'menubtn_reset':'Reset',
+      'menubtn_quit':'Quit'
+  }
     //all menu button layout indices (how far they come down the screen)
-    this.menuBtnOffsetIndices = {'Start':0,'Back':1,'Resume':0,'Reset':1,'Quit':2}
+    this.menuBtnOffsetIndices = {'menubtn_start':0,'menubtn_back':1,'menubtn_resume':0,'menubtn_reset':1,'menubtn_quit':2}
     
     //declare default menu visibility
     this.state2DefaultMenuOpen = {};
@@ -295,12 +303,11 @@ class PlayScreen extends GameScreen {
     this.state2DefaultMenuOpen[this.STOPPED] = true;
     
     //associate buttons with game state
-    let pauseMenu = ['Resume','Reset','Quit'];
     this.state2Btns = {};
-    this.state2Btns[this.FIRSTRUN] = ['Start','Back'];
-    this.state2Btns[this.COUNTDOWN] = pauseMenu;
-    this.state2Btns[this.RUNNING] = pauseMenu;
-    this.state2Btns[this.STOPPED] = ['Start','Quit'];
+    this.state2Btns[this.FIRSTRUN] = ['menubtn_start','menubtn_back'];
+    this.state2Btns[this.COUNTDOWN] = ['menubtn_resume','menubtn_reset','menubtn_quit'];
+    this.state2Btns[this.RUNNING] = ['menubtn_resume','menubtn_reset','menubtn_quit'];
+    this.state2Btns[this.STOPPED] = ['menubtn_start','menubtn_quit'];
     
     //associate menu text with game state
     let pauseText = "Paused";
@@ -330,11 +337,11 @@ class PlayScreen extends GameScreen {
     this.resetCallBack = (function() {this.changeGameState(this.FIRSTRUN);}).bind(this);
     //aggregate button callbacks
     this.menuBtnActions = {
-      'Start':this.startCallBack,
-      'Back':this.backCallback,
-      'Quit':this.backCallback,
-      'Resume':this.resumeCallback,
-      'Reset':this.resetCallBack
+      'menubtn_start':this.startCallBack,
+      'menubtn_back':this.backCallback,
+      'menubtn_quit':this.backCallback,
+      'menubtn_resume':this.resumeCallback,
+      'menubtn_reset':this.resetCallBack
     };
     //specify countdown done action
     let handleCounterDone = (function() {this.changeGameState(this.RUNNING);}).bind(this);
@@ -389,11 +396,12 @@ class PlayScreen extends GameScreen {
       )
     };
     //auto calc menu buttons
-    for(var i=0;i<this.menuBtnStrs.length;i++) {
-      let btnStr = this.menuBtnStrs[i];
-      let offset = this.menuBtnOffsetIndices[btnStr]*(menuBtnHeight+menuBtnSpace);
+    for(var i=0;i<this.menuBtnElems.length;i++) {
+      let btnElem = this.menuBtnElems[i];
+      let btnStr = this.menuBtnStrs[btnElem];
+      let offset = this.menuBtnOffsetIndices[btnElem]*(menuBtnHeight+menuBtnSpace);
       //(x,y,width,height,str,boxMargin,rounding,boxColor,font,textColor)
-      this.elems['menubtn_'+btnStr] = new MenuButton(
+      this.elems[btnElem] = new MenuButton(
         menuBtnPosX, menuBtnPosY+offset, menuBtnWidth, menuBtnHeight,
         btnStr, menuBtnBoxMargin, menuBtnRounding,
         menuBtnColor, menuBtnFont, menuBtnTextColor
@@ -448,13 +456,11 @@ class PlayScreen extends GameScreen {
     this.layout.push("menuText");
     this.elemVisible["menuText"] = true;
     //button group
-    //this.layout.push(this.menuBtnGroup);
-    //this.elemVisible[this.menuBtnGroup] = true;
-    for(let i = 0;i < this.menuBtnStrs.length;i++) {
-      let str = this.menuBtnStrs[i];
-      this.layout.push("menubtn_"+str);
-      this.elemVisible["menubtn_"+str] = true;
-      this.elemHandleClick["menubtn_"+str] = this.menuBtnActions[str];
+    for(let i = 0;i < this.menuBtnElems.length;i++) {
+      let btnElem = this.menuBtnElems[i];
+      this.layout.push(btnElem);
+      this.elemVisible[btnElem] = true;
+      this.elemHandleClick[btnElem] = this.menuBtnActions[btnElem];
     }
     
     //put this here so the initial state is handled regularly
@@ -488,7 +494,7 @@ class PlayScreen extends GameScreen {
     this.elemVisible['menuText'] = true;
     let showBtns = this.state2Btns[this.gameState];
     for(let i = 0;i < showBtns.length;i++)
-      this.elemVisible["menubtn_"+showBtns[i]] = true;
+      this.elemVisible[showBtns[i]] = true;
   }
   
   resumeGame() {
@@ -499,7 +505,7 @@ class PlayScreen extends GameScreen {
     this.elemVisible['menuText'] = false;
     let showBtns = this.state2Btns[this.gameState];
     for(let i = 0;i < showBtns.length;i++)
-      this.elemVisible["menubtn_"+showBtns[i]] = false;
+      this.elemVisible[showBtns[i]] = false;
     
     this.paused = false;
   }
@@ -510,7 +516,9 @@ class PlayScreen extends GameScreen {
     
     for(let i = 0;i < this.layout.length;i++) {
       let elem = this.layout[this.layout.length-1-i];
-      if(this.elemVisible[elem] && this.elems[elem].isAtPoint(mX,mY)) {
+      if((elem in this.elemHandleClick) && this.elemVisible[elem] && this.elems[elem].isAtPoint(mX,mY)) {
+        console.log("Handling click "+elem);
+        console.log(this.elemHandleClick[elem]);
         let propagate = this.elemHandleClick[elem]();
         if(!propagate)
           break;
