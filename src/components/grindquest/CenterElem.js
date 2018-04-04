@@ -42,6 +42,11 @@ class CenterElem {
     this.topY = this.calcOffset(this.y,height);
   }
   
+  translate(xDelta,yDelta) {
+    this.x = this.x + xDelta;
+    this.y = this.y + yDelta;
+  }
+  
   setCenterPos(x,y) {
     this.x = x;
     this.y = y;

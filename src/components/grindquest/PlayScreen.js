@@ -2,6 +2,7 @@ import GameScreen from './GameScreen';
 import MenuButton from './MenuButton';
 import CenterElem from './CenterElem';
 import TextBox from './TextBox';
+import ElemGroup from './ElemGroup';
 import groundImg from '../../assets/PixelGrass.png';
 
 class ScrollGround extends CenterElem {
@@ -10,6 +11,14 @@ class ScrollGround extends CenterElem {
     this.scrollSpeed = scrollSpeed;
     this.srcImg = srcImg;
     this.sy = this.srcImg.height-this.srcImg.width-1;
+    this.disabled = false;
+  }
+  
+  disableMove() {
+    this.disabled = true;
+  }
+  enableMove(){
+    this.disabled = false;
   }
   
   setSpeed(newSpeed) {
@@ -30,14 +39,16 @@ class ScrollGround extends CenterElem {
       0,Math.round(this.sy),this.srcImg.width,this.srcImg.width
     );
     p.pop();
+    if(this.disabled)
+      return;
     this.moveGround();
   }
 }
 class Lane extends CenterElem {
   constructor(x,y,width,height) {
     super(x,y,width,height);
-    this.markerX = x;
-    this.markerY = Math.round(y+height*0.2);
+    this.markerOffsetX = 0;
+    this.markerOffsetY = Math.round(height*0.2);
   }
   
   render(p) {
@@ -47,8 +58,29 @@ class Lane extends CenterElem {
     p.fill(237,201,175,150);
     p.rect(this.x,this.y,this.width,this.height);
     p.fill(10,10,10);
-    p.rect(this.markerX,this.markerY,markerSide,markerSide);
+    p.rect(this.x+this.markerOffsetX,this.y+this.markerOffsetY,
+      markerSide,markerSide);
     p.pop();
+  }
+}
+
+class LaneGroup extends ElemGroup {
+  constructor(x,y,width,height,laneSpace) {
+    super(x,y,width,height);
+    this.laneWidth = width;
+    this.laneHeight = height;
+    this.laneSpace = laneSpace;
+  }
+  
+  getLanePosX(laneIndex) {
+    return this.elems[laneIndex].x;
+  }
+  
+  createLanes(numLanes) {
+    let deltaX = this.laneSpace + this.laneWidth;
+    for(let i = 0;i < numLanes;i++) {
+      this.addElemLocal(new Lane(deltaX * (-(numLanes-1)/2+i),0,this.laneWidth,this.laneHeight));
+    }
   }
 }
 
@@ -60,6 +92,109 @@ class Player extends CenterElem {
     p.rect(this.x,this.y,this.width,this.height);
     p.pop();
   }
+}
+
+class CountdownDisplay extends TextBox {
+  constructor(x,y,width,height,
+    textSize,boxMargin,rounding,
+    boxColor,font,textColor,
+    startCount,countSpeed,threshold,handleDone) {
+    
+    super(x,y,width,height,startCount.toFixed(1),textSize,boxMargin,rounding,boxColor,font,textColor);
+    this.counter = startCount;
+    this.maxCount = startCount;
+    this.countSpeed = countSpeed;
+    this.threshold = threshold;
+    this.handleDone = handleDone;
+    this.countOver = false;
+    this.disabled = false;
+  }
+  resetCounter() {
+    this.disabled = false;
+    this.counter = this.maxCount;
+    this.countOver = false;
+  }
+  disableCounter() {this.disabled = true;}
+  enableCounter() {this.disabled = false;}
+  
+  render(p) {
+    super.render(p);
+    if(this.disabled)
+      return;
+    if(this.counter-this.countSpeed > this.threshold) {
+      this.counter -= this.countSpeed;
+      let countStr = this.counter.toFixed(1);
+      if(countStr !== this.text)
+        this.text = countStr;
+    } else {
+      if(!this.countOver) {
+        this.handleDone();
+        this.countOver = true;
+      }
+    }
+  }
+}
+
+function changeGameState(newState) {
+  if(this.paused) {
+    this.resumeGame();    
+  }
+  
+  if(newState === this.FIRSTRUN) {
+    this.playerLane = 1;
+    this.playerMoving = false;
+    this.groundSpeed = 0;
+    this.elems.countdownText.disableCounter();
+    
+    this.elemVisible['countdownText'] = false;
+    this.elemVisible['pauseBtn'] = false;
+  } else if(newState === this.COUNTDOWN) {
+    this.playerLane = 1;
+    this.playerMoving = false;
+    this.groundSpeed = 0;
+    this.elems.countdownText.resetCounter();
+    
+    this.elemVisible['pauseBtn'] = true;
+    this.elemVisible['countdownText'] = true;
+  } else if(newState === this.RUNNING) {
+    this.playerLane = 1;
+    this.playerMoving = false;
+    this.groundSpeed = this.maxGroundSpeed;
+    this.counter = 0;
+    this.elems.countdownText.disableCounter();
+    
+    this.elemVisible['countdownText'] = false;
+    this.elemVisible['pauseBtn'] = true;
+  } else if(newState === this.STOPPED) {
+    this.playerMoving = false;
+    this.groundSpeed = 0;
+    this.counter = 0;
+    
+    this.elemVisible['pauseBtn'] = false;
+  } else
+    return;
+
+  //re-set menu visibility
+  for(let i = 0;i < this.menuBtnStrs.length;i++) {
+    this.elemVisible["menubtn_"+this.menuBtnStrs[i]] = false;
+  }
+  let menuVisible = this.state2DefaultMenuOpen[newState];
+  if(menuVisible) {
+    this.elemVisible["menuOverlay"] = true;
+    this.elemVisible["menuText"] = true;
+    let menuBtnVisible = this.state2Btns[newState];
+    for(let i = 0;i < menuBtnVisible.length;i++) {
+      this.elemVisible["menubtn_"+menuBtnVisible[i]] = true;
+    }
+  } else {
+    this.elemVisible["menuOverlay"] = false;
+    this.elemVisible["menuText"] = false;
+  }
+  //change the message to the new state's message
+  let menuMessage = this.state2menuText[newState];
+  this.elems.menuText.text = menuMessage;
+  
+  this.gameState = newState;
 }
 
 class PlayScreen extends GameScreen {
@@ -77,13 +212,13 @@ class PlayScreen extends GameScreen {
     this.gameState = this.FIRSTRUN;
     this.playerLane = 1;
     this.playerMoving = false;
-    this.counter = 0;
-    //used to buffer speed for pausing
-    this.prePauseSpeed = 0;
     
     //countdown rate
-    this.maxCount = 3;
+    this.startCount = 3;
     this.countSpeed = 1.05 / this.targetFrameRate;
+    
+    //the sub-object that keeps all the member elements
+    this.elems = {};
     
     //pause button pos/size
     this.pauseBtnPosX = this.widthPctI(16);
@@ -121,6 +256,9 @@ class PlayScreen extends GameScreen {
     this.countdownWidth  = this.widthPctI(30);
     this.countdownHeight  = this.heightPctI(12);
     this.countdownTextSize = this.heightPctI(10);
+    //touchareas pos/size
+    let lBoundPct = 30;
+    let rBoundPct = 30;
     
     //menu button styling
     this.menuBtnFont = 'Helvetica';
@@ -140,11 +278,20 @@ class PlayScreen extends GameScreen {
     this.countdownBoxColor = "rgba(20,20,20,200)";
     this.countdownFont = "Arial";
     this.countdownTextColor = "rgb(256,256,256)";
+    //menu overlay styling
+    this.menuOverlayColor = this.p.color(20,20,20,150);
     
     //list all menu buttons
     this.menuBtnStrs = ['Start','Back','Resume','Reset','Quit'];
     //all menu button layout indices (how far they come down the screen)
     this.menuBtnOffsetIndices = {'Start':0,'Back':1,'Resume':0,'Reset':1,'Quit':2}
+    
+    //declare default menu visibility
+    this.state2DefaultMenuOpen = {};
+    this.state2DefaultMenuOpen[this.FIRSTRUN] = true;
+    this.state2DefaultMenuOpen[this.COUNTDOWN] = false;
+    this.state2DefaultMenuOpen[this.RUNNING] = false;
+    this.state2DefaultMenuOpen[this.STOPPED] = true;
     
     //associate buttons with game state
     let pauseMenu = ['Resume','Reset','Quit'];
@@ -165,7 +312,6 @@ class PlayScreen extends GameScreen {
     //pause button text
     this.pauseBtnStr = "Pause";
     
-    
     //specify menu actions
     //specify back action
     let backCallback = function() {
@@ -174,18 +320,14 @@ class PlayScreen extends GameScreen {
     };
     this.backCallback = backCallback.bind(this);
     //specify pause action
-    let pauseCallback = function() {this.pauseGame();};
-    this.pauseCallback = pauseCallback.bind(this);
+    this.pauseCallback = (function() {this.pauseGame();}).bind(this);
     //specify resume action
-    let resumeCallback = function() {this.resumeGame();};
-    this.resumeCallback = resumeCallback.bind(this);
+    this.resumeCallback = (function() {this.resumeGame();}).bind(this);
     //specify start action
-    let startCallBack = function() {this.changeGameState(this.COUNTDOWN);};
-    this.startCallBack = startCallBack.bind(this);
+    this.startCallBack = (function() {this.changeGameState(this.COUNTDOWN);}).bind(this);
     //specify reset action
-    let resetCallBack = function() {this.changeGameState(this.FIRSTRUN);};
-    this.resetCallBack = resetCallBack.bind(this);
-    //aggregate callbacks
+    this.resetCallBack = (function() {this.changeGameState(this.FIRSTRUN);}).bind(this);
+    //aggregate button callbacks
     this.menuBtnActions = {
       'Start':this.startCallBack,
       'Back':this.backCallback,
@@ -193,87 +335,134 @@ class PlayScreen extends GameScreen {
       'Resume':this.resumeCallback,
       'Reset':this.resetCallBack
     };
+    //specify countdown done action
+    this.handleCounterDone = (function() {this.changeGameState(this.RUNNING);}).bind(this);
     
     //misc ground
     let numLanes = 3;
     this.maxGroundSpeed = 5.3;
-      
+    
+    /*this.menuBtnGroup = new ButtonGroup(this.menuBtnPosX,this.menuBtnPosY,this.menuBtnWidth,this.menuBtnHeight,
+      this.menuBtnBoxMargin,this.menuBtnRounding,this.menuBtnSpace,
+      this.menuBtnColor,this.menuBtnFont,this.menuBtnTextColor);
+    for(let i = 0;i < this.menuBtnStrs;i++) {
+      let btnStr = this.menuBtnStrs[i];
+      this.menuBtnGroup.createButton(btnStr,btnStr,this.menuBtnActions[btnStr]);
+    }*/
+    
+    this.elems = {
+      pauseBtn : new MenuButton(
+        this.pauseBtnPosX, this.pauseBtnPosY, this.pauseBtnWidth, this.pauseBtnHeight,
+        this.pauseBtnStr, this.pauseBtnBoxMargin, this.pauseBtnRounding,
+        this.pauseBtnColor, this.pauseBtnFont, this.pauseBtnTextColor
+      ),
+      ground : new ScrollGround(this.widthPctI(50),this.heightPctI(50),groundWidth,groundHeight,
+        0,this.p.loadImage(groundImg)
+      ),
+      laneGroup : new LaneGroup(this.widthPctI(50),this.laneY,
+        this.laneWidth,this.laneHeight,this.laneSpace
+      ),
+      player : new Player(this.playerPosX,this.playerPosY,this.playerWidth,this.playerHeight),
+      countdownText : new CountdownDisplay(
+        this.countdownPosX, this.countdownPosY, this.countdownWidth, this.countdownHeight,
+        this.countdownTextSize,this.countdownBoxMargin,this.countdownRounding,
+        this.countdownBoxColor,this.countdownFont,this.countdownTextColor,
+        this.startCount,this.countSpeed,0,this.handleCounterDone
+      ),
+      menuOverlay : new class MenuOverlay extends CenterElem {
+        constructor(x,y,width,height,overlayColor){
+          super(x,y,width,height);
+          this.overlayColor = overlayColor;
+        }
+        render(p) {
+          p.fill(this.overlayColor);
+          p.rect(this.leftX,this.topY,this.width,this.height);
+        }
+      }(this.widthPct(50),this.heightPct(50),this.widthPctI(100),this.heightPctI(100),
+        this.menuOverlayColor
+      ),
+      menuText : new TextBox(
+        this.dialoguePosX,this.dialoguePosY,this.dialogueWidth,this.dialogueHeight,
+        "BLANK",this.dialogueTextSize,
+        this.countdownBoxMargin,this.countdownRounding,
+        this.countdownBoxColor,this.countdownFont,this.countdownTextColor
+      ),
+      screenLeftRect : new CenterElem(this.widthPctI(lBoundPct/2),this.heightPctI(50),
+        this.widthPctI(lBoundPct),this.heightPctI(100)
+      ),
+      screenRightRect : new CenterElem(this.widthPctI(100 - rBoundPct/2),this.heightPctI(50),
+        this.widthPctI(lBoundPct),this.heightPctI(100)
+      )
+    };
     //auto calc menu buttons
-    this.menuBtns = {};
     for(var i=0;i<this.menuBtnStrs.length;i++) {
       let btnStr = this.menuBtnStrs[i];
       let offset = this.menuBtnOffsetIndices[btnStr]*(this.menuBtnHeight+this.menuBtnSpace);
       //(x,y,width,height,str,boxMargin,rounding,boxColor,font,textColor)
-      this.menuBtns[btnStr] = new MenuButton(
+      this.elems['menubtn_'+btnStr] = new MenuButton(
         this.menuBtnPosX, this.menuBtnPosY+offset, this.menuBtnWidth, this.menuBtnHeight,
         btnStr, this.menuBtnBoxMargin, this.menuBtnRounding,
         this.menuBtnColor, this.menuBtnFont, this.menuBtnTextColor
       );
     }
-    //auto calc pause button
-    this.pauseBtn = new MenuButton(
-      this.pauseBtnPosX, this.pauseBtnPosY, this.pauseBtnWidth, this.pauseBtnHeight,
-      this.pauseBtnStr, this.pauseBtnBoxMargin, this.pauseBtnRounding,
-      this.pauseBtnColor, this.pauseBtnFont, this.pauseBtnTextColor
-    );
-    //auto calc ground
-    this.ground = new ScrollGround(this.widthPctI(50),this.heightPctI(50),groundWidth,groundHeight,
-      0,this.p.loadImage(groundImg));
-    //auto calc lanes
-    this.lanes = [];
-    for(i=0;i<numLanes;i++) {
-      let offset = (-1+i)*(this.laneSpace+this.laneWidth);
-      this.lanes.push(new Lane(this.widthPctI(50)+offset,this.laneY,this.laneWidth,this.laneHeight));
+    //populate lane group
+    this.elems.laneGroup.createLanes(numLanes);
+    
+    //flattened DAG for layout priority
+    this.layout = [];
+    //control layout visibility
+    this.elemVisible = {};
+    
+    //ground
+    this.layout.push("ground");
+    //lanes
+    this.layout.push("laneGroup");
+    //player
+    this.layout.push("player");
+    //countdown group
+    this.layout.push("countdownText");
+    this.elemVisible["countdownText"] = false;
+    //screen left
+    this.layout.push("screenLeftRect");
+    this.elemVisible["screenLeftRect"] = false;
+    //screen right
+    this.layout.push("screenRightRect");
+    this.elemVisible["screenRightRect"] = false;
+    
+    //menu overlay
+    this.layout.push("menuOverlay");
+    this.elemVisible["menuOverlay"] = false;
+    //pause btn
+    this.layout.push("pauseBtn");
+    this.elemVisible["pauseBtn"] = false;
+    //text display
+    this.layout.push("menuText");
+    this.elemVisible["menuText"] = true;
+    //button group
+    //this.layout.push(this.menuBtnGroup);
+    //this.elemVisible[this.menuBtnGroup] = true;
+    for(let i = 0;i < this.menuBtnStrs.length;i++) {
+      let str = this.menuBtnStrs[i];
+      this.layout.push("menubtn_"+str);
+      this.elemVisible["menubtn_"+str] = true;
     }
-    //auto calc player
-    this.player = new Player(this.playerPosX,this.playerPosY,this.playerWidth,this.playerHeight);
-    //auto calc countdown
-    this.countdownText = new TextBox(
-      this.countdownPosX,this.countdownPosY,this.countdownWidth,this.countdownHeight,
-      "BLANK",this.countdownTextSize,
-      this.countdownBoxMargin,this.countdownRounding,
-      this.countdownBoxColor,this.countdownFont,this.countdownTextColor
-    );
     
-    //auto calc menu text
-    this.menuText = new TextBox(
-      this.dialoguePosX,this.dialoguePosY,this.dialogueWidth,this.dialogueHeight,
-      "BLANK",this.dialogueTextSize,
-      this.countdownBoxMargin,this.countdownRounding,
-      this.countdownBoxColor,this.countdownFont,this.countdownTextColor
-    );
-    
-    //auto calc left and right click areas
-    let lBoundPct = 30;
-    let rBoundPct = 30;
-    this.screenLeftRect = new CenterElem(this.widthPctI(lBoundPct/2),this.heightPctI(50),
-      this.widthPctI(lBoundPct),this.heightPctI(100)
-    );
-    this.screenRightRect = new CenterElem(this.widthPctI(100 - rBoundPct/2),this.heightPctI(50),
-      this.widthPctI(lBoundPct),this.heightPctI(100)
-    );
+    //put this here so the initial state is handled regularly
+    this.changeGameState = changeGameState.bind(this);
+    this.changeGameState(this.FIRSTRUN);
   }
   
-  set groundSpeed(newSpeed) {
-    this.ground.setSpeed(newSpeed);
-  }
-  get groundSpeed() {
-    return this.ground.scrollSpeed;
-  }
-  
-  updatePlayerLane() {
-    this.player.x = this.lanes[this.playerLane].x;
-  }
-  
+  set groundSpeed(newSpeed) {this.elems.ground.setSpeed(newSpeed);}
+  get groundSpeed() {return this.elems.ground.scrollSpeed;}
+  updatePlayerLane() {this.elems.player.x = this.elems.laneGroup.getLanePosX(this.playerLane);}
   moveLeft() {
     if(this.playerLane > 0) {
       this.playerLane -= 1;
       this.updatePlayerLane();
     }
   }
-  
   moveRight() {
-    if(this.playerLane < this.lanes.length-1) {
+    if(this.playerLane < this.elems.laneGroup.length-1) {
       this.playerLane += 1;
       this.updatePlayerLane();
     }
@@ -281,54 +470,42 @@ class PlayScreen extends GameScreen {
   
   pauseGame() {
     this.paused = true;
-    this.prePauseSpeed = this.groundSpeed;
-    this.groundSpeed = 0;
+    
+    this.elems.countdownText.disableCounter();
+    this.elems.ground.disableMove();
+    
+    this.elemVisible['menuOverlay'] = true;
+    this.elemVisible['menuText'] = true;
+    let showBtns = this.state2Btns[this.gameState];
+    for(let i = 0;i < showBtns.length;i++)
+      this.elemVisible["menubtn_"+showBtns[i]] = true;
   }
   
   resumeGame() {
-    this.ground.setSpeed(this.prePauseSpeed);
+    this.elems.countdownText.enableCounter();
+    this.elems.ground.enableMove();
+    
+    this.elemVisible['menuOverlay'] = false;
+    this.elemVisible['menuText'] = false;
+    let showBtns = this.state2Btns[this.gameState];
+    for(let i = 0;i < showBtns.length;i++)
+      this.elemVisible["menubtn_"+showBtns[i]] = false;
+    
     this.paused = false;
-  }
-  
-  changeGameState(newState) {
-    if(newState === this.FIRSTRUN) {
-      this.paused = false;
-      this.playerLane = 1;
-      this.playerMoving = false;
-      this.groundSpeed = 0;
-      this.counter = this.maxCount;
-    } else if(newState === this.COUNTDOWN) {
-      this.playerLane = 1;
-      this.playerMoving = false;
-      this.groundSpeed = 0;
-      this.counter = this.maxCount;
-    } else if(newState === this.RUNNING) {
-      this.playerLane = 1;
-      this.playerMoving = false;
-      this.groundSpeed = this.maxGroundSpeed;
-      this.counter = 0;
-    } else if(newState === this.STOPPED) {
-      this.paused = false;
-      this.playerMoving = false;
-      this.groundSpeed = 0;
-      this.counter = 0;
-    } else
-      return;
-    this.gameState = newState;
   }
   
   handleMouseClick() {
     var mX = this.p.mouseX,
-      mY = this.p.mouseY;
+      mY = this.p.mouseY;   
     //pause is like a super-state 
     if(this.paused) {
-      if(this.pauseBtn.isAtPoint(mX,mY)) {
+      if(this.elems.pauseBtn.isAtPoint(mX,mY)) {
         this.resumeCallback();
         return true;
       }
       let pauseBtns = this.state2Btns[this.gameState];
       for(let i = 0;i < pauseBtns.length;i++) {
-        if(this.menuBtns[pauseBtns[i]].isAtPoint(mX,mY)) {
+        if(this.elems["menubtn_"+pauseBtns[i]].isAtPoint(mX,mY)) {
           if(this.menuBtnActions[pauseBtns[i]])
             this.menuBtnActions[pauseBtns[i]]();
           return true;
@@ -336,7 +513,7 @@ class PlayScreen extends GameScreen {
       }
     } else {
       //pause works when the gameMode is not stopped or firstrun
-      if((this.gameState === this.RUNNING || this.gameState === this.COUNTDOWN) && this.pauseBtn.isAtPoint(mX,mY)) {
+      if((this.gameState === this.RUNNING || this.gameState === this.COUNTDOWN) && this.elems.pauseBtn.isAtPoint(mX,mY)) {
         this.pauseCallback();
         return true;
       }
@@ -345,7 +522,7 @@ class PlayScreen extends GameScreen {
         let firstRunBtns = this.state2Btns[this.FIRSTRUN];
         for(let i = 0;i < firstRunBtns.length;i++) {
           let btnStr = firstRunBtns[i];
-          if(this.menuBtns[btnStr].isAtPoint(mX,mY)) {
+          if(this.elems["menubtn_"+btnStr].isAtPoint(mX,mY)) {
             if(this.menuBtnActions[btnStr])
               this.menuBtnActions[btnStr]();
             return true;
@@ -358,9 +535,9 @@ class PlayScreen extends GameScreen {
       else if(this.gameState === this.RUNNING) {
         //movement controls disabled while still moving
         if(!this.playerMoving) {
-          if(this.screenLeftRect.isAtPoint(mX,mY))
+          if(this.elems.screenLeftRect.isAtPoint(mX,mY))
             this.moveLeft();
-          else if(this.screenRightRect.isAtPoint(mX,mY))
+          else if(this.elems.screenRightRect.isAtPoint(mX,mY))
             this.moveRight();
         }
         return true;
@@ -370,51 +547,12 @@ class PlayScreen extends GameScreen {
   }
   render() {
     this.p.background(this.p.color(10,50,90));
-    //draw the ground
-    this.ground.render(this.p);
-    //draw the lane markers
-    for(var i = 0;i < this.lanes.length;i++) {
-      this.lanes[i].render(this.p);
-    }
-    
-    //draw the stuff on the lanes
-    
-    //draw the player
-    this.player.render(this.p);
-    
-    //draw the countdown if game is counting down
-    if(this.gameState === this.COUNTDOWN) {
-      let countStr = this.counter.toFixed(1);
-      if(countStr !== this.countdownText.text)
-        this.countdownText.text = countStr;
-      this.countdownText.render(this.p);
-    }
-    
-    //draw the relevant menu info
-    if(this.paused || this.gameState === this.FIRSTRUN || this.gameState === this.STOPPED) {
-      
-      let contextBtns = this.state2Btns[this.gameState];
-      this.p.fill(20,20,20,150);
-      this.p.rect(0,0,this.widthPctI(100),this.heightPctI(100));
-      //draw the menu text
-      this.menuText.text = this.state2menuText[this.gameState];
-      this.menuText.render(this.p);
-      for(i=0;i<contextBtns.length;i++) {
-        this.menuBtns[contextBtns[i]].render(this.p);
+    for(let i = 0;i < this.layout.length;i++) {
+      let elemStr = this.layout[i];
+      if(!(elemStr in this.elemVisible) || (this.elemVisible[elemStr] === true)) {
+        //console.log("Rendering "+elemStr);
+        this.elems[elemStr].render(this.p);
       }
-    }
-    //draw the pause button if the game is running
-    if(this.gameState === this.RUNNING || this.gameState === this.COUNTDOWN) {
-      this.pauseBtn.render(this.p);
-    }
-    
-    //state change stuff
-    //countdown if necessary
-    if(this.gameState === this.COUNTDOWN && !this.paused) {
-      if(this.counter-this.countSpeed > 0) {
-        this.counter -= this.countSpeed;
-      } else
-        this.changeGameState(this.RUNNING);
     }
   }
 }

@@ -1,7 +1,7 @@
 import CenterElem from './CenterElem';
 
 class MenuButton extends CenterElem {
-  constructor(x,y,width,height,str,boxMargin,rounding,boxColor,font,textColor) {
+  constructor(x,y,width,height,str,boxMargin,rounding,boxColor,font,textColor,handleClick) {
     super(x,y,width,height);
     this.rounding = rounding;
     this.boxMargin = boxMargin;
@@ -23,6 +23,10 @@ class MenuButton extends CenterElem {
         p.pop();
       }
     }(x,y,width,height-boxMargin*2,str,font,textColor);
+    if(handleClick !== undefined)
+      this.handleClick = handleClick;
+    else
+      this.handleClick = (function(){console.log("Click "+this.str);}).bind(this);
   }
   
   render(p) {
