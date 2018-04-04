@@ -135,6 +135,10 @@ class CountdownDisplay extends TextBox {
   }
 }
 
+class InvisRect extends CenterElem {
+  render(p) {;}
+}
+
 function changeGameState(newState) {
   if(this.paused) {
     this.resumeGame();    
@@ -339,14 +343,6 @@ class PlayScreen extends GameScreen {
     let numLanes = 3;
     this.maxGroundSpeed = 5.3;
     
-    /*this.menuBtnGroup = new ButtonGroup(this.menuBtnPosX,this.menuBtnPosY,this.menuBtnWidth,this.menuBtnHeight,
-      this.menuBtnBoxMargin,this.menuBtnRounding,this.menuBtnSpace,
-      this.menuBtnColor,this.menuBtnFont,this.menuBtnTextColor);
-    for(let i = 0;i < this.menuBtnStrs;i++) {
-      let btnStr = this.menuBtnStrs[i];
-      this.menuBtnGroup.createButton(btnStr,btnStr,this.menuBtnActions[btnStr]);
-    }*/
-    
     //the sub-object that keeps all the member elements
     this.elems = {
       pauseBtn : new MenuButton(
@@ -385,10 +381,10 @@ class PlayScreen extends GameScreen {
         countdownBoxMargin,countdownRounding,
         countdownBoxColor,countdownFont,countdownTextColor
       ),
-      screenLeftRect : new CenterElem(this.widthPctI(lBoundPct/2),this.heightPctI(50),
+      screenLeftRect : new InvisRect(this.widthPctI(lBoundPct/2),this.heightPctI(50),
         this.widthPctI(lBoundPct),this.heightPctI(100)
       ),
-      screenRightRect : new CenterElem(this.widthPctI(100 - rBoundPct/2),this.heightPctI(50),
+      screenRightRect : new InvisRect(this.widthPctI(100 - rBoundPct/2),this.heightPctI(50),
         this.widthPctI(lBoundPct),this.heightPctI(100)
       )
     };
@@ -410,6 +406,9 @@ class PlayScreen extends GameScreen {
     this.layout = [];
     //control layout visibility
     this.elemVisible = {};
+    //control click handling
+    //if handles return true, the click propagates to lower elements
+    this.elemHandleClick = {};
     
     //ground
     this.layout.push("ground");
@@ -422,17 +421,29 @@ class PlayScreen extends GameScreen {
     this.elemVisible["countdownText"] = false;
     //screen left
     this.layout.push("screenLeftRect");
-    this.elemVisible["screenLeftRect"] = false;
+    this.elemVisible["screenLeftRect"] = true;
+    this.elemHandleClick["screenLeftRect"] = function() {
+      if(this.gameState === this.RUNNING)
+        this.movePlayerLeft();
+      return false;
+    }.bind(this);
     //screen right
     this.layout.push("screenRightRect");
-    this.elemVisible["screenRightRect"] = false;
+    this.elemVisible["screenRightRect"] = true;
+    this.elemHandleClick["screenRightRect"] = function() {
+      if(this.gameState === this.RUNNING)
+        this.movePlayerRight();
+      return false;
+    }.bind(this);
     
     //menu overlay
     this.layout.push("menuOverlay");
     this.elemVisible["menuOverlay"] = false;
+    this.elemHandleClick["menuOverlay"] = function() {return false;};
     //pause btn
     this.layout.push("pauseBtn");
     this.elemVisible["pauseBtn"] = false;
+    this.elemHandleClick["pauseBtn"] = this.pauseCallback;
     //text display
     this.layout.push("menuText");
     this.elemVisible["menuText"] = true;
@@ -443,6 +454,7 @@ class PlayScreen extends GameScreen {
       let str = this.menuBtnStrs[i];
       this.layout.push("menubtn_"+str);
       this.elemVisible["menubtn_"+str] = true;
+      this.elemHandleClick["menubtn_"+str] = this.menuBtnActions[str];
     }
     
     //put this here so the initial state is handled regularly
@@ -453,13 +465,13 @@ class PlayScreen extends GameScreen {
   set groundSpeed(newSpeed) {this.elems.ground.setSpeed(newSpeed);}
   get groundSpeed() {return this.elems.ground.scrollSpeed;}
   updatePlayerLane() {this.elems.player.x = this.elems.laneGroup.getLanePosX(this.playerLane);}
-  moveLeft() {
+  movePlayerLeft() {
     if(this.playerLane > 0) {
       this.playerLane -= 1;
       this.updatePlayerLane();
     }
   }
-  moveRight() {
+  movePlayerRight() {
     if(this.playerLane < this.elems.laneGroup.length-1) {
       this.playerLane += 1;
       this.updatePlayerLane();
@@ -494,54 +506,16 @@ class PlayScreen extends GameScreen {
   
   handleMouseClick() {
     var mX = this.p.mouseX,
-      mY = this.p.mouseY;   
-    //pause is like a super-state 
-    if(this.paused) {
-      if(this.elems.pauseBtn.isAtPoint(mX,mY)) {
-        this.resumeCallback();
-        return true;
-      }
-      let pauseBtns = this.state2Btns[this.gameState];
-      for(let i = 0;i < pauseBtns.length;i++) {
-        if(this.elems["menubtn_"+pauseBtns[i]].isAtPoint(mX,mY)) {
-          if(this.menuBtnActions[pauseBtns[i]])
-            this.menuBtnActions[pauseBtns[i]]();
-          return true;
-        }
-      }
-    } else {
-      //pause works when the gameMode is not stopped or firstrun
-      if((this.gameState === this.RUNNING || this.gameState === this.COUNTDOWN) && this.elems.pauseBtn.isAtPoint(mX,mY)) {
-        this.pauseCallback();
-        return true;
-      }
-      //if first run, only enable certain buttons, ignore the pause button
-      if(this.gameState === this.FIRSTRUN){
-        let firstRunBtns = this.state2Btns[this.FIRSTRUN];
-        for(let i = 0;i < firstRunBtns.length;i++) {
-          let btnStr = firstRunBtns[i];
-          if(this.elems["menubtn_"+btnStr].isAtPoint(mX,mY)) {
-            if(this.menuBtnActions[btnStr])
-              this.menuBtnActions[btnStr]();
-            return true;
-          }
-        }
-      }
-      //while running, handle the click based on where the click was
-      //left and right thirds are the L and R controls
-      //the central third should be blank for now
-      else if(this.gameState === this.RUNNING) {
-        //movement controls disabled while still moving
-        if(!this.playerMoving) {
-          if(this.elems.screenLeftRect.isAtPoint(mX,mY))
-            this.moveLeft();
-          else if(this.elems.screenRightRect.isAtPoint(mX,mY))
-            this.moveRight();
-        }
-        return true;
+      mY = this.p.mouseY;
+    
+    for(let i = 0;i < this.layout.length;i++) {
+      let elem = this.layout[this.layout.length-1-i];
+      if(this.elemVisible[elem] && this.elems[elem].isAtPoint(mX,mY)) {
+        let propagate = this.elemHandleClick[elem]();
+        if(!propagate)
+          break;
       }
     }
-    return true;
   }
   render() {
     this.p.background(this.p.color(10,50,90));

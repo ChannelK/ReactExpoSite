@@ -52,8 +52,9 @@ class CenterElem {
     this.y = y;
   }
   
+  //this has been lowered from an alert because render is looped very quickly
   render(p) {
-    alert("render in CenterElem not implemented");
+    console.log("render in CenterElem not implemented");
   }
 }
 export default CenterElem;
