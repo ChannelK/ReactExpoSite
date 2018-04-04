@@ -214,72 +214,69 @@ class PlayScreen extends GameScreen {
     this.playerMoving = false;
     
     //countdown rate
-    this.startCount = 3;
-    this.countSpeed = 1.05 / this.targetFrameRate;
-    
-    //the sub-object that keeps all the member elements
-    this.elems = {};
+    let startCount = 3;
+    let countSpeed = 1.05 / this.targetFrameRate;
     
     //pause button pos/size
-    this.pauseBtnPosX = this.widthPctI(16);
-    this.pauseBtnPosY = this.heightPctI(5);
-    this.pauseBtnWidth = this.widthPctI(28);
-    this.pauseBtnHeight = this.heightPctI(7);
+    let pauseBtnPosX = this.widthPctI(16);
+    let pauseBtnPosY = this.heightPctI(5);
+    let pauseBtnWidth = this.widthPctI(28);
+    let pauseBtnHeight = this.heightPctI(7);
     //menu button pos/size
-    this.menuBtnPosX = this.widthPctI(50);
-    this.menuBtnPosY = this.heightPctI(55);
-    this.menuBtnWidth = this.widthPctI(65);
-    this.menuBtnHeight = this.widthPctI(10);
-    this.menuBtnSpace = this.heightPctI(6);
+    let menuBtnPosX = this.widthPctI(50);
+    let menuBtnPosY = this.heightPctI(55);
+    let menuBtnWidth = this.widthPctI(65);
+    let menuBtnHeight = this.widthPctI(10);
+    let menuBtnSpace = this.heightPctI(6);
     //ground pos/size
     let groundWidth = this.widthPctI(80);
     let groundHeight = this.heightPctI(80);
     //lane pos/size
-    this.laneWidth = this.widthPctI(15);
-    this.laneHeight = this.heightPctI(80);
-    this.laneY = this.heightPctI(50);
-    this.laneSpace = this.widthPct(5);
+    let laneWidth = this.widthPctI(15);
+    let laneHeight = this.heightPctI(80);
+    let laneY = this.heightPctI(50);
+    let laneSpace = this.widthPct(5);
     //player pos/size
-    this.playerPosX = this.widthPctI(50);
-    this.playerPosY = this.heightPctI(85);
-    this.playerWidth = this.widthPctI(5);
-    this.playerHeight = this.widthPctI(5);
+    let playerPosX = this.widthPctI(50);
+    let playerPosY = this.heightPctI(85);
+    let playerWidth = this.widthPctI(5);
+    let playerHeight = this.widthPctI(5);
     //dialogue pos/size
-    this.dialoguePosX = this.widthPctI(50);
-    this.dialoguePosY = this.heightPctI(30);
-    this.dialogueWidth = this.widthPctI(70);
-    this.dialogueHeight = this.heightPctI(20);
-    this.dialogueTextSize = this.heightPctI(4);
+    let dialoguePosX = this.widthPctI(50);
+    let dialoguePosY = this.heightPctI(30);
+    let dialogueWidth = this.widthPctI(70);
+    let dialogueHeight = this.heightPctI(20);
+    let dialogueTextSize = this.heightPctI(4);
     //countdown pos/size
-    this.countdownPosX = this.widthPctI(50);
-    this.countdownPosY = this.heightPctI(30);
-    this.countdownWidth  = this.widthPctI(30);
-    this.countdownHeight  = this.heightPctI(12);
-    this.countdownTextSize = this.heightPctI(10);
+    let countdownPosX = this.widthPctI(50);
+    let countdownPosY = this.heightPctI(30);
+    let countdownWidth  = this.widthPctI(30);
+    let countdownHeight  = this.heightPctI(12);
+    let countdownTextSize = this.heightPctI(10);
     //touchareas pos/size
     let lBoundPct = 30;
     let rBoundPct = 30;
     
     //menu button styling
-    this.menuBtnFont = 'Helvetica';
-    this.menuBtnColor = this.p.color(209, 176, 87);
-    this.menuBtnTextColor = this.p.color(80, 60, 5);
-    this.menuBtnRounding = this.widthPctI(3);
-    this.menuBtnBoxMargin = this.heightPctI(1.3);
+    let menuBtnFont = 'Helvetica';
+    let menuBtnColor = this.p.color(209, 176, 87);
+    let menuBtnTextColor = this.p.color(80, 60, 5);
+    let menuBtnRounding = this.widthPctI(3);
+    let menuBtnBoxMargin = this.heightPctI(1.3);
     //pause button styling
-    this.pauseBtnFont = 'Helvetica';
-    this.pauseBtnColor = this.p.color(209, 176, 87);
-    this.pauseBtnTextColor = this.p.color(80, 60, 5);
-    this.pauseBtnRounding = this.widthPctI(0.5);
-    this.pauseBtnBoxMargin = this.heightPctI(1);
+    let pauseBtnFont = 'Helvetica';
+    let pauseBtnColor = this.p.color(209, 176, 87);
+    let pauseBtnTextColor = this.p.color(80, 60, 5);
+    let pauseBtnRounding = this.widthPctI(0.5);
+    let pauseBtnBoxMargin = this.heightPctI(1);
     //countdown styling
-    this.countdownBoxMargin = this.heightPctI(1);
-    this.countdownRounding  = this.widthPctI(0.5);
-    this.countdownBoxColor = "rgba(20,20,20,200)";
-    this.countdownFont = "Arial";
-    this.countdownTextColor = "rgb(256,256,256)";
+    let countdownBoxMargin = this.heightPctI(1);
+    let countdownRounding  = this.widthPctI(0.5);
+    let countdownBoxColor = "rgba(20,20,20,200)";
+    let countdownFont = "Arial";
+    let countdownTextColor = "rgb(256,256,256)";
     //menu overlay styling
-    this.menuOverlayColor = this.p.color(20,20,20,150);
+    let menuOverlayColor = this.p.color(20,20,20,150);
     
     //list all menu buttons
     this.menuBtnStrs = ['Start','Back','Resume','Reset','Quit'];
@@ -310,7 +307,7 @@ class PlayScreen extends GameScreen {
     this.state2menuText[this.STOPPED] = "The End. Play again?";
     
     //pause button text
-    this.pauseBtnStr = "Pause";
+    let pauseBtnStr = "Pause";
     
     //specify menu actions
     //specify back action
@@ -336,7 +333,7 @@ class PlayScreen extends GameScreen {
       'Reset':this.resetCallBack
     };
     //specify countdown done action
-    this.handleCounterDone = (function() {this.changeGameState(this.RUNNING);}).bind(this);
+    let handleCounterDone = (function() {this.changeGameState(this.RUNNING);}).bind(this);
     
     //misc ground
     let numLanes = 3;
@@ -350,24 +347,25 @@ class PlayScreen extends GameScreen {
       this.menuBtnGroup.createButton(btnStr,btnStr,this.menuBtnActions[btnStr]);
     }*/
     
+    //the sub-object that keeps all the member elements
     this.elems = {
       pauseBtn : new MenuButton(
-        this.pauseBtnPosX, this.pauseBtnPosY, this.pauseBtnWidth, this.pauseBtnHeight,
-        this.pauseBtnStr, this.pauseBtnBoxMargin, this.pauseBtnRounding,
-        this.pauseBtnColor, this.pauseBtnFont, this.pauseBtnTextColor
+        pauseBtnPosX, pauseBtnPosY, pauseBtnWidth, pauseBtnHeight,
+        pauseBtnStr, pauseBtnBoxMargin, pauseBtnRounding,
+        pauseBtnColor, pauseBtnFont, pauseBtnTextColor
       ),
       ground : new ScrollGround(this.widthPctI(50),this.heightPctI(50),groundWidth,groundHeight,
         0,this.p.loadImage(groundImg)
       ),
-      laneGroup : new LaneGroup(this.widthPctI(50),this.laneY,
-        this.laneWidth,this.laneHeight,this.laneSpace
+      laneGroup : new LaneGroup(this.widthPctI(50),laneY,
+        laneWidth,laneHeight,laneSpace
       ),
-      player : new Player(this.playerPosX,this.playerPosY,this.playerWidth,this.playerHeight),
+      player : new Player(playerPosX,playerPosY,playerWidth,playerHeight),
       countdownText : new CountdownDisplay(
-        this.countdownPosX, this.countdownPosY, this.countdownWidth, this.countdownHeight,
-        this.countdownTextSize,this.countdownBoxMargin,this.countdownRounding,
-        this.countdownBoxColor,this.countdownFont,this.countdownTextColor,
-        this.startCount,this.countSpeed,0,this.handleCounterDone
+        countdownPosX, countdownPosY, countdownWidth, countdownHeight,
+        countdownTextSize,countdownBoxMargin,countdownRounding,
+        countdownBoxColor,countdownFont,countdownTextColor,
+        startCount,countSpeed,0,handleCounterDone
       ),
       menuOverlay : new class MenuOverlay extends CenterElem {
         constructor(x,y,width,height,overlayColor){
@@ -379,13 +377,13 @@ class PlayScreen extends GameScreen {
           p.rect(this.leftX,this.topY,this.width,this.height);
         }
       }(this.widthPct(50),this.heightPct(50),this.widthPctI(100),this.heightPctI(100),
-        this.menuOverlayColor
+        menuOverlayColor
       ),
       menuText : new TextBox(
-        this.dialoguePosX,this.dialoguePosY,this.dialogueWidth,this.dialogueHeight,
-        "BLANK",this.dialogueTextSize,
-        this.countdownBoxMargin,this.countdownRounding,
-        this.countdownBoxColor,this.countdownFont,this.countdownTextColor
+        dialoguePosX,dialoguePosY,dialogueWidth,dialogueHeight,
+        "BLANK",dialogueTextSize,
+        countdownBoxMargin,countdownRounding,
+        countdownBoxColor,countdownFont,countdownTextColor
       ),
       screenLeftRect : new CenterElem(this.widthPctI(lBoundPct/2),this.heightPctI(50),
         this.widthPctI(lBoundPct),this.heightPctI(100)
@@ -397,12 +395,12 @@ class PlayScreen extends GameScreen {
     //auto calc menu buttons
     for(var i=0;i<this.menuBtnStrs.length;i++) {
       let btnStr = this.menuBtnStrs[i];
-      let offset = this.menuBtnOffsetIndices[btnStr]*(this.menuBtnHeight+this.menuBtnSpace);
+      let offset = this.menuBtnOffsetIndices[btnStr]*(menuBtnHeight+menuBtnSpace);
       //(x,y,width,height,str,boxMargin,rounding,boxColor,font,textColor)
       this.elems['menubtn_'+btnStr] = new MenuButton(
-        this.menuBtnPosX, this.menuBtnPosY+offset, this.menuBtnWidth, this.menuBtnHeight,
-        btnStr, this.menuBtnBoxMargin, this.menuBtnRounding,
-        this.menuBtnColor, this.menuBtnFont, this.menuBtnTextColor
+        menuBtnPosX, menuBtnPosY+offset, menuBtnWidth, menuBtnHeight,
+        btnStr, menuBtnBoxMargin, menuBtnRounding,
+        menuBtnColor, menuBtnFont, menuBtnTextColor
       );
     }
     //populate lane group

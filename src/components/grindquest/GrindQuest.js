@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import '../../Site.css';
 //import sketch from './Sketch';
 import RunnerGame from './RunnerGame';
-import p5 from 'p5';
+//import p5 from 'p5';
 //use to squash p5 object-type errors
-//import p5 from 'p5/lib/p5.min';
+import p5 from 'p5/lib/p5.min';
 
 class GrindQuest extends Component {
   componentDidMount() {
