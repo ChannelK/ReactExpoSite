@@ -150,6 +150,9 @@ function changeGameState(newState) {
     this.groundSpeed = 0;
     this.elems.countdownText.disableCounter();
     
+    this.menuFSM.enable();
+    this.menuFSM.setState('menubtn_start');
+    
     this.elemVisible['countdownText'] = false;
     this.elemVisible['pauseBtn'] = false;
   } else if(newState === this.COUNTDOWN) {
@@ -157,6 +160,9 @@ function changeGameState(newState) {
     this.playerMoving = false;
     this.groundSpeed = 0;
     this.elems.countdownText.resetCounter();
+    
+    this.menuFSM.disable();
+    this.menuFSM.setState('menubtn_resume');
     
     this.elemVisible['pauseBtn'] = true;
     this.elemVisible['countdownText'] = true;
@@ -167,12 +173,18 @@ function changeGameState(newState) {
     this.counter = 0;
     this.elems.countdownText.disableCounter();
     
+    this.menuFSM.disable();
+    this.menuFSM.setState('menubtn_resume');
+    
     this.elemVisible['countdownText'] = false;
     this.elemVisible['pauseBtn'] = true;
   } else if(newState === this.STOPPED) {
     this.playerMoving = false;
     this.groundSpeed = 0;
     this.counter = 0;
+    
+    this.menuFSM.disable();
+    this.menuFSM.setState('menubtn_reset');
     
     this.elemVisible['pauseBtn'] = false;
   } else
@@ -463,9 +475,85 @@ class PlayScreen extends GameScreen {
       this.elemHandleClick[btnElem] = this.menuBtnActions[btnElem];
     }
     
+    //set up the FSMs that handle keyboard/mouse
+    this.menuFSM = new function(screen){
+      this.screen = screen;
+      let btn2State = {
+        menubtn_start:{
+          enter:() => {console.log("Goto Start");},
+          keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
+            if(this.screen.keyPress(usrD))
+              this.setState('menubtn_back');
+            else if(this.screen.keyPress(usrEnter))
+              console.log("Selected Start");
+          }.bind(this)
+        },
+        menubtn_back:{
+          enter:() => {console.log("Goto Back");},
+          keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
+            if(this.screen.keyPress(usrU))
+              this.setState('menubtn_start');
+            else if(this.screen.keyPress(usrEnter))
+              console.log("Selected Back");
+          }.bind(this)
+        },
+        menubtn_resume:{
+          enter:() => {console.log("Goto Resume");},
+          keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
+            if(this.screen.keyPress(usrD))
+              this.setState('menubtn_reset');
+            else if(this.screen.keyPress(usrEnter))
+              console.log("Selected Resume");
+          }.bind(this)
+        },
+        menubtn_reset:{
+          enter:() => {console.log("Goto Reset");},
+          keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
+            if(this.screen.keyPress(usrU))
+              this.setState('menubtn_resume');
+            else if(this.screen.keyPress(usrD))
+              this.setState('menubtn_quit');
+            else if(this.screen.keyPress(usrEnter))
+              console.log("Selected Reset");
+          }.bind(this)
+        },
+        menubtn_quit:{
+          enter:() => {console.log("Goto Quit");},
+          keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
+            if(this.screen.keyPress(usrU))
+              this.setState('menubtn_reset');
+            else if(this.screen.keyPress(usrEnter))
+              console.log("Selected Quit");
+          }.bind(this)
+        }
+      };
+      let state = undefined;
+      let enabled = false;
+      this.handleKeyboard = function(usrU,usrD,usrL,usrR,usrEnter,usrEsc) {
+        if(enabled)
+          state.keyInput(usrU,usrD,usrL,usrR,usrEnter,usrEsc);
+      }
+      this.setState = function(newState) {
+        if(state!==undefined && ('exit' in state))
+          state.exit();
+        state = btn2State[newState];
+        state.enter();
+      }
+      this.enable = function(){enabled=true;};
+      this.disable = function(){enabled=false;};
+    }(this);
+    
+    this.ctrlFSM = {
+    };
+    
     //put this here so the initial state is handled regularly
     this.changeGameState = changeGameState.bind(this);
     this.changeGameState(this.FIRSTRUN);
+  }
+  
+  //this can be calculated from the internal state 
+  get menuOpen() {
+    return (this.gameState===this.FIRSTRUN) || (this.gameState === this.STOPPED) || (this.paused===true);
   }
   
   set groundSpeed(newSpeed) {this.elems.ground.setSpeed(newSpeed);}
@@ -517,14 +605,22 @@ class PlayScreen extends GameScreen {
     for(let i = 0;i < this.layout.length;i++) {
       let elem = this.layout[this.layout.length-1-i];
       if((elem in this.elemHandleClick) && this.elemVisible[elem] && this.elems[elem].isAtPoint(mX,mY)) {
-        console.log("Handling click "+elem);
-        console.log(this.elemHandleClick[elem]);
         let propagate = this.elemHandleClick[elem]();
         if(!propagate)
           break;
       }
     }
   }
+  
+  handleKeyboard(usrU,usrD,usrL,usrR,usrEnter,usrEsc) {
+    if(this.menuOpen) {
+      this.menuFSM.handleKeyboard(usrU,usrD,usrL,usrR,usrEnter,usrEsc);
+    } else {
+      //this.ctrlFSM.handleKeyboard(usrU,usrD,usrL,usrR,usrEnter,usrEsc);
+    }
+    return true;
+  }
+  
   render() {
     this.p.background(this.p.color(10,50,90));
     for(let i = 0;i < this.layout.length;i++) {
