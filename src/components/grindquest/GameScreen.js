@@ -42,7 +42,7 @@ class GameScreen {
   }
   
   //event handlers
-  handleKeyboard(usrU,usrD,usrL,usrR) {
+  handleKeyboard(usrU,usrD,usrL,usrR,usrEnter,usrEsc) {
     return false;
   }
   handleMouseClick() {
