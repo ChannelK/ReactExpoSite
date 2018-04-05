@@ -116,7 +116,7 @@ class TitleScreen extends GameScreen {
       this.menuCursor++;
     }
     
-    if(this.keyRelease(usrEnter)) {
+    if(this.keyPress(usrEnter)) {
       var selectedStr = this.btnStrs[this.menuCursor];
       if(this.btnActions[selectedStr]) {
           this.btnActions[selectedStr]();

@@ -254,8 +254,10 @@ var MenuFSM = function(screen){
       keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
         if(this.screen.keyPress(usrD))
           this.setState('menubtn_back');
-        else if(this.screen.keyPress(usrEnter))
+        else if(this.screen.keyPress(usrEnter)) {
           console.log("Selected Start");
+          this.screen.menuBtnActions.menubtn_start();
+        }
       }.bind(this)
     },
     menubtn_back:{
@@ -266,8 +268,10 @@ var MenuFSM = function(screen){
       keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
         if(this.screen.keyPress(usrU))
           this.setState('menubtn_start');
-        else if(this.screen.keyPress(usrEnter))
+        else if(this.screen.keyPress(usrEnter)) {
           console.log("Selected Back");
+          this.screen.menuBtnActions.menubtn_back();
+        }
       }.bind(this)
     },
     menubtn_resume:{
@@ -278,8 +282,10 @@ var MenuFSM = function(screen){
       keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
         if(this.screen.keyPress(usrD))
           this.setState('menubtn_reset');
-        else if(this.screen.keyPress(usrEnter))
+        else if(this.screen.keyPress(usrEnter)) {
           console.log("Selected Resume");
+          this.screen.menuBtnActions.menubtn_resume();
+        }
       }.bind(this)
     },
     menubtn_reset:{
@@ -292,8 +298,10 @@ var MenuFSM = function(screen){
           this.setState('menubtn_resume');
         else if(this.screen.keyPress(usrD))
           this.setState('menubtn_quit');
-        else if(this.screen.keyPress(usrEnter))
+        else if(this.screen.keyPress(usrEnter)) {
           console.log("Selected Reset");
+          this.screen.menuBtnActions.menubtn_reset();
+        }
       }.bind(this)
     },
     menubtn_quit:{
@@ -304,8 +312,10 @@ var MenuFSM = function(screen){
       keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
         if(this.screen.keyPress(usrU))
           this.setState('menubtn_reset');
-        else if(this.screen.keyPress(usrEnter))
+        else if(this.screen.keyPress(usrEnter)) {
           console.log("Selected Quit");
+          this.screen.menuBtnActions.menubtn_quit();
+        }
       }.bind(this)
     }
   };

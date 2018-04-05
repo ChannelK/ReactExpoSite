@@ -70,7 +70,7 @@ class AboutScreen extends GameScreen {
   
   
   handleKeyboard(usrU,usrD,usrL,usrR,usrEnter,usrEsc) {
-    if(this.keyRelease(usrEnter) || this.keyRelease(usrEsc)) {
+    if(this.keyPress(usrEnter) || this.keyPress(usrEsc)) {
       this.backCallback();
     }
     return true;
