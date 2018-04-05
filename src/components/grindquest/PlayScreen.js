@@ -146,10 +146,10 @@ class Cursor extends CenterElem {
     this.offsetY = offsetY;
     this.cursorColor = cursorColor===undefined?'rgb(256,80,80)':cursorColor;
   }
-  offsetElemTop(elem,marginY) {return elem.height/2+marginY+this.height/2;}
-  offsetElemBottom(elem,marginY) {return -this.offsetElemTop(elem,marginY);}
-  offsetElemLeft(elem,marginX) {return elem.width/2+marginX+this.width/2;}
-  offsetElemRight(elem,marginX) {return -this.offsetElemLeft(elem,marginX);}
+  offsetElemBottom(elem,marginY) {return elem.height/2-marginY-this.height/2;}
+  offsetElemTop(elem,marginY) {return -this.offsetElemBottom(elem,marginY);}
+  offsetElemRight(elem,marginX) {return elem.width/2+marginX+this.width/2;}
+  offsetElemLeft(elem,marginX) {return -this.offsetElemRight(elem,marginX);}
   
   moveToElem(elem,offsetX,offsetY) {
     this.x = elem.x + ((offsetX===undefined)?this.offsetX:offsetX);
@@ -159,7 +159,7 @@ class Cursor extends CenterElem {
     p.push();
     p.noStroke();
     p.fill(this.cursorColor);
-    p.ellipse(this.leftX,this.topY,this.cursorWidth,this.cursorHeight);
+    p.ellipse(this.x,this.y,this.width,this.height);
     p.pop();
   }
 }
@@ -224,6 +224,7 @@ function changeGameState(newState) {
   if(menuVisible) {
     this.elemVisible["menuOverlay"] = true;
     this.elemVisible["menuText"] = true;
+    this.elemVisible['menuCursor'] = true;
     let menuBtnVisible = this.state2Btns[newState];
     for(let i = 0;i < menuBtnVisible.length;i++) {
       this.elemVisible[menuBtnVisible[i]] = true;
@@ -231,6 +232,7 @@ function changeGameState(newState) {
   } else {
     this.elemVisible["menuOverlay"] = false;
     this.elemVisible["menuText"] = false;
+    this.elemVisible['menuCursor'] = false;
   }
   //change the message to the new state's message
   let menuMessage = this.state2menuText[newState];
@@ -382,6 +384,11 @@ class PlayScreen extends GameScreen {
     //touchareas pos/size
     let lBoundPct = 30;
     let rBoundPct = 30;
+    //menuCursor pos/size
+    let cursorWidth = this.widthPctI(6);
+    let cursorHeight = this.widthPctI(6);
+    let cursorOffsetX = this.widthPctI(-6);
+    let cursorOffsetY = 0;
     
     //menu button styling
     let menuBtnFont = 'Helvetica';
@@ -514,7 +521,8 @@ class PlayScreen extends GameScreen {
       ),
       screenRightRect : new InvisRect(this.widthPctI(100 - rBoundPct/2),this.heightPctI(50),
         this.widthPctI(lBoundPct),this.heightPctI(100)
-      )
+      ),
+      menuCursor : new Cursor(0,0,cursorWidth,cursorHeight,cursorOffsetX,cursorOffsetY)
     };
     //auto calc menu buttons
     for(var i=0;i<this.menuBtnElems.length;i++) {
@@ -583,6 +591,9 @@ class PlayScreen extends GameScreen {
       this.elemVisible[btnElem] = true;
       this.elemHandleClick[btnElem] = this.menuBtnActions[btnElem];
     }
+    //menu cursor
+    this.layout.push("menuCursor");
+    this.elemVisible["menuCursor"] = true;
     
     //set up the FSMs that handle keyboard/mouse
     this.menuFSM = new MenuFSM(this);
@@ -625,6 +636,7 @@ class PlayScreen extends GameScreen {
     
     this.elemVisible['menuOverlay'] = true;
     this.elemVisible['menuText'] = true;
+    this.elemVisible['menuCursor'] = true;
     let showBtns = this.state2Btns[this.gameState];
     for(let i = 0;i < showBtns.length;i++)
       this.elemVisible[showBtns[i]] = true;
@@ -637,6 +649,7 @@ class PlayScreen extends GameScreen {
     
     this.elemVisible['menuOverlay'] = false;
     this.elemVisible['menuText'] = false;
+    this.elemVisible['menuCursor'] = false;
     let showBtns = this.state2Btns[this.gameState];
     for(let i = 0;i < showBtns.length;i++)
       this.elemVisible[showBtns[i]] = false;
@@ -646,6 +659,8 @@ class PlayScreen extends GameScreen {
   
   moveMenuCursor(elem) {
     console.log("Cursor moved to elem '"+elem+"'");
+    let cursor = this.elems.menuCursor;
+    cursor.moveToElem(this.elems[elem],cursor.offsetElemLeft(this.elems[elem],this.widthPctI(2)));
   }
   
   handleMouseClick() {
