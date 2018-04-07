@@ -24,8 +24,6 @@ class FiniteStateMachine {
     //autobind the state's functions
     for(let i = 0;i < stateHandles.length;i++) {
       let handle = stateHandles[i];
-      console.log("Binding "+handle);
-      
       if(newState[handle]) {
         let callBack = newState[handle];
         newState[handle] = callBack.bind(this);
