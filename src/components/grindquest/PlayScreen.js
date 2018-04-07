@@ -251,49 +251,42 @@ function changeGameState(newState) {
 var menuStates = {
   menubtn_start:{
     enter:function(){
-      console.log("Goto Start");
       this.screen.moveMenuCursor('menubtn_start');
     },
     keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
       if(this.screen.keyPress(usrD))
         this.setState('menubtn_back');
       else if(this.screen.keyPress(usrEnter)) {
-        console.log("Selected Start");
         this.screen.menuBtnActions.menubtn_start();
       }
     }
   },
   menubtn_back:{
     enter:function(){
-      console.log("Goto Back");
       this.screen.moveMenuCursor('menubtn_back');
     },
     keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
       if(this.screen.keyPress(usrU))
         this.setState('menubtn_start');
       else if(this.screen.keyPress(usrEnter)) {
-        console.log("Selected Back");
         this.screen.menuBtnActions.menubtn_back();
       }
     }
   },
   menubtn_resume:{
     enter:function(){
-      console.log("Goto Resume");
       this.screen.moveMenuCursor('menubtn_resume');
     },
     keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
       if(this.screen.keyPress(usrD))
         this.setState('menubtn_reset');
       else if(this.screen.keyPress(usrEnter)) {
-        console.log("Selected Resume");
         this.screen.menuBtnActions.menubtn_resume();
       }
     }
   },
   menubtn_reset:{
     enter:function(){
-      console.log("Goto Reset");
       this.screen.moveMenuCursor('menubtn_reset');
     },
     keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
@@ -302,21 +295,18 @@ var menuStates = {
       else if(this.screen.keyPress(usrD))
         this.setState('menubtn_quit');
       else if(this.screen.keyPress(usrEnter)) {
-        console.log("Selected Reset");
         this.screen.menuBtnActions.menubtn_reset();
       }
     }
   },
   menubtn_quit:{
     enter:function(){
-      console.log("Goto Quit");
       this.screen.moveMenuCursor('menubtn_quit');
     },
     keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
       if(this.screen.keyPress(usrU))
         this.setState('menubtn_reset');
       else if(this.screen.keyPress(usrEnter)) {
-        console.log("Selected Quit");
         this.screen.menuBtnActions.menubtn_quit();
       }
     }
@@ -332,13 +322,11 @@ var CtrlStates = function(numLanes){
     return function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
       if(this.screen.keyPress(usrL)) {
           if(currentLaneIndex!==0) {
-            console.log("Moving Left to "+leftLane);
             this.screen.movePlayerLeft();
             this.setState(leftLane);
           }
       } else if(this.screen.keyPress(usrR)) {
           if(currentLaneIndex!==numLanes-1){
-            console.log("Moving Right to "+rightLane);
             this.screen.movePlayerRight();
             this.setState(rightLane);
           }
@@ -351,7 +339,9 @@ var CtrlStates = function(numLanes){
   let stateEntryFactory = function(j){
         var k=j;
         return function() {
-          console.log("Entered Lane "+k);
+          //do nothing as player movement is handled in the key press
+          //this may change later
+          //console.log("Entered Lane "+k);
         };
   };
   
@@ -711,7 +701,6 @@ class PlayScreen extends GameScreen {
   }
   
   moveMenuCursor(elem) {
-    console.log("Cursor moved to elem '"+elem+"'");
     let cursor = this.elems.menuCursor;
     cursor.moveToElem(this.elems[elem],cursor.offsetElemLeft(this.elems[elem],this.widthPctI(2)));
   }
