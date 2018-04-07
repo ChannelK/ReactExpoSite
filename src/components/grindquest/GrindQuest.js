@@ -6,21 +6,19 @@ import RunnerGame from './RunnerGame';
 //use to squash p5 object-type errors
 import p5 from 'p5/lib/p5.min';
 
+/*
+ * This code based on react-p5-wrapper
+ * https://www.npmjs.com/package/react-p5-wrapper
+ * Source code appropriated and altered to fix memleak
+ * Issue logged at https://github.com/NeroCor/react-p5-wrapper/issues/13
+ */
+
 class GrindQuest extends Component {
   componentDidMount() {
     this.canvas = new p5(RunnerGame, this.wrapper);
     //this.canvas = new p5(sketch, this.wrapper);
-    if( this.canvas.myCustomRedrawAccordingToNewPropsHandler ) {
-      this.canvas.myCustomRedrawAccordingToNewPropsHandler(this.props);
-    }
   }
   
-  componentWillReceiveProps(newprops) {
-    if( this.canvas.myCustomRedrawAccordingToNewPropsHandler ) {
-      this.canvas.myCustomRedrawAccordingToNewPropsHandler(newprops);
-    }
-  }
-    
   componentWillUnmount() {
     this.canvas.remove();
   }
