@@ -61,6 +61,10 @@ export default function RunnerGame (p) {
     }
   }
   
+  p.keyPressed = function() {
+    return false;
+  }
+  
   p.setup = function() {
     let targetFrameRate = 30;
     p.frameRate(targetFrameRate);
