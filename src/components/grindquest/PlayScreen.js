@@ -4,6 +4,8 @@ import CenterElem from './CenterElem';
 import TextBox from './TextBox';
 import ElemGroup from './ElemGroup';
 import groundImg from '../../assets/PixelGrass.png';
+import { State } from './FiniteStateMachine';
+import FiniteStateMachine from './FiniteStateMachine';
 
 class ScrollGround extends CenterElem {
   constructor(x,y,width,height,scrollSpeed,srcImg) {
@@ -242,97 +244,82 @@ function changeGameState(newState) {
 }
 
 //fsm for menu handling
-var MenuFSM = function(screen){
-  this.screen = screen;
-  
-  let btn2State = {
-    menubtn_start:{
-      enter:function(){
-        console.log("Goto Start");
-        this.screen.moveMenuCursor('menubtn_start');
-      }.bind(this),
-      keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
-        if(this.screen.keyPress(usrD))
-          this.setState('menubtn_back');
-        else if(this.screen.keyPress(usrEnter)) {
-          console.log("Selected Start");
-          this.screen.menuBtnActions.menubtn_start();
-        }
-      }.bind(this)
+var menuStates = {
+  menubtn_start:{
+    enter:function(){
+      console.log("Goto Start");
+      this.screen.moveMenuCursor('menubtn_start');
     },
-    menubtn_back:{
-      enter:function(){
-        console.log("Goto Back");
-        this.screen.moveMenuCursor('menubtn_back');
-      }.bind(this),
-      keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
-        if(this.screen.keyPress(usrU))
-          this.setState('menubtn_start');
-        else if(this.screen.keyPress(usrEnter)) {
-          console.log("Selected Back");
-          this.screen.menuBtnActions.menubtn_back();
-        }
-      }.bind(this)
-    },
-    menubtn_resume:{
-      enter:function(){
-        console.log("Goto Resume");
-        this.screen.moveMenuCursor('menubtn_resume');
-      }.bind(this),
-      keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
-        if(this.screen.keyPress(usrD))
-          this.setState('menubtn_reset');
-        else if(this.screen.keyPress(usrEnter)) {
-          console.log("Selected Resume");
-          this.screen.menuBtnActions.menubtn_resume();
-        }
-      }.bind(this)
-    },
-    menubtn_reset:{
-      enter:function(){
-        console.log("Goto Reset");
-        this.screen.moveMenuCursor('menubtn_reset');
-      }.bind(this),
-      keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
-        if(this.screen.keyPress(usrU))
-          this.setState('menubtn_resume');
-        else if(this.screen.keyPress(usrD))
-          this.setState('menubtn_quit');
-        else if(this.screen.keyPress(usrEnter)) {
-          console.log("Selected Reset");
-          this.screen.menuBtnActions.menubtn_reset();
-        }
-      }.bind(this)
-    },
-    menubtn_quit:{
-      enter:function(){
-        console.log("Goto Quit");
-        this.screen.moveMenuCursor('menubtn_quit');
-      }.bind(this),
-      keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
-        if(this.screen.keyPress(usrU))
-          this.setState('menubtn_reset');
-        else if(this.screen.keyPress(usrEnter)) {
-          console.log("Selected Quit");
-          this.screen.menuBtnActions.menubtn_quit();
-        }
-      }.bind(this)
+    keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
+      if(this.screen.keyPress(usrD))
+        this.setState('menubtn_back');
+      else if(this.screen.keyPress(usrEnter)) {
+        console.log("Selected Start");
+        this.screen.menuBtnActions.menubtn_start();
+      }
     }
-  };
-  let state = undefined;
-  let enabled = false;
-  this.handleKeyboard = function(usrU,usrD,usrL,usrR,usrEnter,usrEsc) {
-    if(enabled)
-      state.keyInput(usrU,usrD,usrL,usrR,usrEnter,usrEsc);
+  },
+  menubtn_back:{
+    enter:function(){
+      console.log("Goto Back");
+      this.screen.moveMenuCursor('menubtn_back');
+    },
+    keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
+      if(this.screen.keyPress(usrU))
+        this.setState('menubtn_start');
+      else if(this.screen.keyPress(usrEnter)) {
+        console.log("Selected Back");
+        this.screen.menuBtnActions.menubtn_back();
+      }
+    }
+  },
+  menubtn_resume:{
+    enter:function(){
+      console.log("Goto Resume");
+      this.screen.moveMenuCursor('menubtn_resume');
+    },
+    keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
+      if(this.screen.keyPress(usrD))
+        this.setState('menubtn_reset');
+      else if(this.screen.keyPress(usrEnter)) {
+        console.log("Selected Resume");
+        this.screen.menuBtnActions.menubtn_resume();
+      }
+    }
+  },
+  menubtn_reset:{
+    enter:function(){
+      console.log("Goto Reset");
+      this.screen.moveMenuCursor('menubtn_reset');
+    },
+    keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
+      if(this.screen.keyPress(usrU))
+        this.setState('menubtn_resume');
+      else if(this.screen.keyPress(usrD))
+        this.setState('menubtn_quit');
+      else if(this.screen.keyPress(usrEnter)) {
+        console.log("Selected Reset");
+        this.screen.menuBtnActions.menubtn_reset();
+      }
+    }
+  },
+  menubtn_quit:{
+    enter:function(){
+      console.log("Goto Quit");
+      this.screen.moveMenuCursor('menubtn_quit');
+    },
+    keyInput:function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
+      if(this.screen.keyPress(usrU))
+        this.setState('menubtn_reset');
+      else if(this.screen.keyPress(usrEnter)) {
+        console.log("Selected Quit");
+        this.screen.menuBtnActions.menubtn_quit();
+      }
+    }
   }
-  this.setState = function(newState) {
-    if(state!==undefined && ('exit' in state))
-      state.exit();
-    state = btn2State[newState];
-    state.enter();
-  }
-  this.enable = function(){enabled=true;};
-  this.disable = function(){enabled=false;};
+};
+
+var CtrlFSM = {
 };
 
 class PlayScreen extends GameScreen {
@@ -429,7 +416,7 @@ class PlayScreen extends GameScreen {
       'menubtn_resume':'Resume',
       'menubtn_reset':'Reset',
       'menubtn_quit':'Quit'
-  }
+    }
     //all menu button layout indices (how far they come down the screen)
     this.menuBtnOffsetIndices = {'menubtn_start':0,'menubtn_back':1,'menubtn_resume':0,'menubtn_reset':1,'menubtn_quit':2}
     
@@ -606,7 +593,12 @@ class PlayScreen extends GameScreen {
     this.elemVisible["menuCursor"] = true;
     
     //set up the FSMs that handle keyboard/mouse
-    this.menuFSM = new MenuFSM(this);
+    this.menuFSM = new FiniteStateMachine(this);
+    let menuStateNames = Object.keys(menuStates);
+    for(let i = 0;i < menuStateNames.length;i++) {
+      let stateName = menuStateNames[i];
+      this.menuFSM.addState(stateName,new State(menuStates[stateName]));
+    }
     
     this.ctrlFSM = {
     };
