@@ -179,6 +179,7 @@ function changeGameState(newState) {
     
     this.menuFSM.enable();
     this.menuFSM.setState('menubtn_start');
+    this.ctrlFSM.disable();
     
     this.elemVisible['countdownText'] = false;
     this.elemVisible['pauseBtn'] = false;
@@ -190,6 +191,8 @@ function changeGameState(newState) {
     
     this.menuFSM.disable();
     this.menuFSM.setState('menubtn_resume');
+    this.ctrlFSM.enable();
+    this.ctrlFSM.setState(this.defaultLane);
     
     this.elemVisible['pauseBtn'] = true;
     this.elemVisible['countdownText'] = true;
@@ -202,6 +205,7 @@ function changeGameState(newState) {
     
     this.menuFSM.disable();
     this.menuFSM.setState('menubtn_resume');
+    this.ctrlFSM.enable();
     
     this.elemVisible['countdownText'] = false;
     this.elemVisible['pauseBtn'] = true;
@@ -210,7 +214,7 @@ function changeGameState(newState) {
     this.groundSpeed = 0;
     this.counter = 0;
     
-    this.menuFSM.disable();
+    this.menuFSM.enable();
     this.menuFSM.setState('menubtn_reset');
     
     this.elemVisible['pauseBtn'] = false;
@@ -319,7 +323,45 @@ var menuStates = {
   }
 };
 
-var CtrlFSM = {
+var CtrlStates = function(numLanes){
+  let stateKeyInputFactory = function(laneIndex,max) {
+    var numLanes = max;
+    var currentLaneIndex = laneIndex;
+    var leftLane = 'laneGroup_'+(currentLaneIndex-1);
+    var rightLane = 'laneGroup_'+(currentLaneIndex+1);
+    return function(usrU,usrD,usrL,usrR,usrEnter,usrEsc){
+      if(this.screen.keyPress(usrL)) {
+          if(currentLaneIndex!==0) {
+            console.log("Moving Left to "+leftLane);
+            this.screen.movePlayerLeft();
+            this.setState(leftLane);
+          }
+      } else if(this.screen.keyPress(usrR)) {
+          if(currentLaneIndex!==numLanes-1){
+            console.log("Moving Right to "+rightLane);
+            this.screen.movePlayerRight();
+            this.setState(rightLane);
+          }
+      } else if(this.screen.keyPress(usrEsc)) {
+        this.screen.pauseGame();
+      }
+    };
+  };
+  
+  let stateEntryFactory = function(j){
+        var k=j;
+        return function() {
+          console.log("Entered Lane "+k);
+        };
+  };
+  
+  for(let i = 0;i < numLanes;i++) {
+    let state = {
+      enter: stateEntryFactory(i),
+      keyInput:stateKeyInputFactory(i,numLanes)
+    }; 
+    this['laneGroup_'+i] = state;
+  }
 };
 
 class PlayScreen extends GameScreen {
@@ -473,6 +515,7 @@ class PlayScreen extends GameScreen {
     
     //misc ground
     let numLanes = 3;
+    this.defaultLane = "laneGroup_"+Math.floor(numLanes/2);
     this.maxGroundSpeed = 5.3;
     
     //the sub-object that keeps all the member elements
@@ -600,8 +643,14 @@ class PlayScreen extends GameScreen {
       this.menuFSM.addState(stateName,new State(menuStates[stateName]));
     }
     
-    this.ctrlFSM = {
-    };
+    this.ctrlFSM = new FiniteStateMachine(this);
+    //the states are dynamically gen'd based on the number of lanes
+    let ctrlStates = new CtrlStates(numLanes);
+    let ctrlStateNames = Object.keys(ctrlStates);
+    for(let i = 0;i < ctrlStateNames.length;i++) {
+      let stateName = ctrlStateNames[i];
+      this.ctrlFSM.addState(stateName,new State(ctrlStates[stateName]));
+    }
     
     //put this here so the initial state is handled regularly
     this.changeGameState = changeGameState.bind(this);
@@ -635,6 +684,7 @@ class PlayScreen extends GameScreen {
     this.elems.countdownText.disableCounter();
     this.elems.ground.disableMove();
     this.menuFSM.enable();
+    this.ctrlFSM.disable();
     
     this.elemVisible['menuOverlay'] = true;
     this.elemVisible['menuText'] = true;
@@ -648,6 +698,7 @@ class PlayScreen extends GameScreen {
     this.elems.countdownText.enableCounter();
     this.elems.ground.enableMove();
     this.menuFSM.disable();
+    this.ctrlFSM.enable();
     
     this.elemVisible['menuOverlay'] = false;
     this.elemVisible['menuText'] = false;
@@ -683,7 +734,7 @@ class PlayScreen extends GameScreen {
     if(this.menuOpen) {
       this.menuFSM.handleKeyboard(usrU,usrD,usrL,usrR,usrEnter,usrEsc);
     } else {
-      //this.ctrlFSM.handleKeyboard(usrU,usrD,usrL,usrR,usrEnter,usrEsc);
+      this.ctrlFSM.handleKeyboard(usrU,usrD,usrL,usrR,usrEnter,usrEsc);
     }
     return true;
   }
