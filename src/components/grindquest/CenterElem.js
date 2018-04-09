@@ -33,6 +33,35 @@ class CenterElem {
       return false;
   }
   
+  get corners() {
+    let leftX = this.leftX;
+    let topY = this.topY;
+    let rightX = this.leftX + this.width;
+    let botY = this.topY + this.height;
+    return [[leftX,topY],[rightX,topY],[leftX,botY],[rightX,botY]];
+  }
+  
+  isInside(boundingElem) {
+    let pts = this.corners;
+    for(let i = 0;i < pts.length;i++) {
+      if(!boundingElem.isAtPoint(pts[i][0],pts[i][1]))
+        return false;
+    }
+    return true;
+  }
+  
+  rectCollision(otherElem,parity) {
+    let pts = this.corners;
+    for(let i = 0;i < pts.length;i++) {
+      if(otherElem.isAtPoint(pts[i][0],pts[i][1]))
+        return true;
+    }
+    if(parity === undefined)
+      return otherElem.rectCollision(this,true);
+    else
+      return false;
+  }
+  
   setWidth(width) {
     this.width = width;
     this.leftX = this.calcOffset(this.x,width);
