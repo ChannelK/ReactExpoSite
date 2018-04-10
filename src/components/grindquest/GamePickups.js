@@ -1,13 +1,37 @@
 import CenterElem from './CenterElem';
 import ElemGroup from './ElemGroup';
+import LinkedList from './LinkedList';
 
 class PickupTracker extends ElemGroup {
   constructor(x,y,width,height,bottomEdge) {
     super(x,y,width,height);
     this.bottomEdge = bottomEdge;
+    
+    this.pickupOrder = [];
+    this.nextOrder = -1;
+    this.picked = [];
+    this.pickup2CreateTime = {};
+    this.levelPickups = null;
+    
+    this.activePickups = new LinkedList();
   }
+  
+  loadLevel(level) {
+    this.levelPickups = level.pickupArray;
+    for(let i = 0;i < this.levelPickups.length;i++)
+      this.pickupOrder.push(i);
+    this.pickupOrder.sort(
+      function(a,b){
+          return this[a].createTime < this[b].createTime;
+      }.bind(level.pickupArray)
+    );
+    this.nextOrder = 0;
+  }
+  
   //moves the group and returns and object if there is a collision
   tickGroup(player) {
+    //add new pickups if it is their time
+    
     //move all the pickups, remove if they have gone over the edge
     for(let i = 0;i < this.elems.length;i++) {
       this.elems[i].movePick();

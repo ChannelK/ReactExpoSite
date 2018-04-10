@@ -6,6 +6,7 @@ import ElemGroup from './ElemGroup';
 import groundImg from '../../assets/PixelGrass.png';
 import { State } from './FiniteStateMachine';
 import FiniteStateMachine from './FiniteStateMachine';
+import GamePickups from './GamePickups';
 
 class ScrollGround extends CenterElem {
   constructor(x,y,width,height,scrollSpeed,srcImg) {
