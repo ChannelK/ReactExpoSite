@@ -1,31 +1,42 @@
 import CenterElem from './CenterElem';
-import ElemGroup from './ElemGroup';
 import LinkedList from './LinkedList';
 
-class PickupTracker extends ElemGroup {
+class PickupTracker {
   constructor(x,y,width,height,bottomEdge) {
-    super(x,y,width,height);
     this.bottomEdge = bottomEdge;
     
-    this.pickupOrder = [];
-    this.nextOrder = -1;
-    this.picked = [];
-    this.pickup2CreateTime = {};
+    //holds pickups the player has gotten
+    this.picked = null;
+    //reference to the pickups array in the level object
     this.levelPickups = null;
-    
-    this.activePickups = new LinkedList();
+    //holds all yet-to-create pickups
+    this.queuedPickups = null;
+    this.queuedPickups_i = null;
+    //holds all active pickups
+    this.activePickups = null;
   }
   
   loadLevel(level) {
+    //initialize level data
+    this.picked = [];
     this.levelPickups = level.pickupArray;
+    this.queuedPickups = new LinkedList();
+    this.activePickups = new LinkedList();
+    //sort the pickups by creation time
+    let pickupCreateOrder = [];
     for(let i = 0;i < this.levelPickups.length;i++)
-      this.pickupOrder.push(i);
-    this.pickupOrder.sort(
+      pickupCreateOrder.push(i);
+    pickupCreateOrder.sort(
       function(a,b){
           return this[a].createTime < this[b].createTime;
-      }.bind(level.pickupArray)
+      }.bind(this.levelPickups)
     );
-    this.nextOrder = 0;
+    //load the pickups and set its iterator
+    for(let i = 0;i < pickupCreateOrder.length;i++) {
+      let pickupIndex = pickupCreateOrder[i];
+      this.queuedPickups.addElem(this.levelPickups[pickupIndex]);
+    }
+    this.queuedPickups_i = this.queuedPickups.iterator();
   }
   
   //moves the group and returns and object if there is a collision
@@ -33,20 +44,21 @@ class PickupTracker extends ElemGroup {
     //add new pickups if it is their time
     
     //move all the pickups, remove if they have gone over the edge
-    for(let i = 0;i < this.elems.length;i++) {
-      this.elems[i].movePick();
-      if(this.elems[i].topY < this.bottomEdge) {
+    let iter = this.activePickups.iterator();
+    for(let pickup = iter.next();iter.hasNext();pickup = iter.next()) {
+      pickup.movePickup();
+      if(pickup.topY < this.bottomEdge) {
         //remove elem
-        console.log("Elem "+i+" went over the bottom edge");
+        console.log("Elem "+pickup+" went over the bottom edge");
         //for test purposes, remove later
-        this.elems[i].y = -this.elems[i].height/2;
+        this.pickup.y = -this.pickup.height/2;
       }
-      
     }
+    iter.reset();
     //determine collision
-    for(let i = 0;i < this.elems.length;i++) {
-      if(player.rectCollision(this.elems[i]))
-        console.log("Player collided with elem"+1);
+    for(let pickup = iter.next();iter.hasNext();pickup = iter.next()) {
+      if(player.rectCollision(pickup))
+        console.log("Player collided with elem"+pickup);
     }
     return;
   }
@@ -67,6 +79,10 @@ class LanePickup extends CenterElem{
     p.fill('rgb(10,10,256)');
     p.ellipse(this.x,this.y,this.width,this.height);
     p.pop();
+  }
+  
+  toString() {
+    return "("+this.x+","+this.y+")";
   }
 }
 

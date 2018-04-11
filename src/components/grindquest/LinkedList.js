@@ -12,16 +12,13 @@ class LinkedList {
     this.tail = null;
   }
   
-  get front(){
-    return this.head.val;
-  }
-  get end(){
-    return this.tail.val;
-  }
+  get next() {return this.head;}
+  set next(newHead) {this.head = newHead;}
   
-  get length() {
-    return this.size;
-  }
+  get front(){return this.head.val;}
+  get end(){return this.tail.val;}
+  
+  get length() {return this.size;}
   
   getElem(index,prevNode) {
     if(prevNode === undefined) {
@@ -80,6 +77,18 @@ class LinkedList {
     }
   }
   
+  shift() {
+    if(this.length === 0) {
+      alert("Cannot shift empty list!");
+      return null;
+    } else
+      return this.remove(0);
+  }
+  
+  iterator() {
+    return new Iterator(this);
+  }
+  
   toString() {
     let listVals = [];
     for(let node = this.head;node !== null;node=node.next)
@@ -91,16 +100,45 @@ class LinkedList {
 //use this to keep access time constant
 class Iterator {
   constructor(list) {
-    this.current = list.head;
+    this.list = list;
+    this.prev = null;
   }
   
-  hasNext() {return this.current.next !== null;}
+  get current() {
+    if(this.prev===null)
+      return this.list;
+    else
+      return this.prev.next;
+  }
+  
+  remove() {
+    if(this.prev === null) {
+      alert("Tried to remove without starting iterator!");
+      return null;
+    }
+    let val = this.current.val;
+    if(this.prev === null)
+      this.list.head = this.current.next;
+    else
+      this.prev.next = this.current.next;
+    return val;
+  }
+  
+  hasNext() {
+    if(this.current === null)
+      return false;
+    else
+      return this.current.next !== null;
+  }
   
   next() {
-    this.current = this.current.next;
-    return this.current;
+    if(!this.hasNext())
+      alert("Tried to get next when there is no next!");
+    this.prev = this.current;
+    return this.current.val;
   }
+  
+  reset() {this.prev = null;}
 }
 
-export { Iterator };
 export default LinkedList;

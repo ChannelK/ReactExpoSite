@@ -45,3 +45,47 @@ it('removes beginning, middle, end elements correctly', () => {
   expect(subjectList.length).toBe(0);
   expect(subjectList.toString()).toBe("[]");
 });
+
+it('iterates beginning to end', () => {
+  var subjects = ['Calculus','Astronomy','Yoga','Latin'];
+  var subjectList = new LinkedList();
+  for(let i = 0;i < subjects.length;i++) {
+    subjectList.addElem(subjects[i]);
+  }
+  let subjectList_i = subjectList.iterator();
+  expect(subjectList_i.hasNext()).toBe(true);
+  //iterate to calculus
+  expect(subjectList_i.next()).toBe('Calculus');
+  expect(subjectList_i.hasNext()).toBe(true);
+  //iterate to astronomy
+  expect(subjectList_i.next()).toBe('Astronomy');
+  //iterate to yoga
+  expect(subjectList_i.next()).toBe('Yoga');
+  //iterate to latin
+  expect(subjectList_i.next()).toBe('Latin');
+  //should be done
+  expect(subjectList_i.hasNext()).toBe(false);
+});
+
+it('iterates and deletes properly', () => {
+  var subjects = ['Calculus','Astronomy','Yoga','Latin'];
+  var subjectList = new LinkedList();
+  for(let i = 0;i < subjects.length;i++) {
+    subjectList.addElem(subjects[i]);
+  }
+  let subjectList_i = subjectList.iterator()
+  expect(subjectList_i.hasNext()).toBe(true);
+  //iterate to calculus and remove it
+  subjectList_i.next();
+  expect(subjectList_i.remove()).toBe('Calculus');
+  expect(subjectList.toString()).toBe("[Astronomy,Yoga,Latin]");
+  expect(subjectList_i.hasNext()).toBe(true);
+  
+  //iterate to latin and remove it
+  subjectList_i.next();
+  let latin = subjectList_i.next();
+  expect(latin).toBe("Latin");
+  expect(subjectList_i.remove()).toBe('Latin');
+  expect(subjectList.toString()).toBe("[Astronomy,Yoga]");
+  expect(subjectList_i.hasNext()).toBe(false);
+});
