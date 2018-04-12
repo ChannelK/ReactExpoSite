@@ -67,6 +67,22 @@ it('iterates beginning to end', () => {
   expect(subjectList_i.hasNext()).toBe(false);
 });
 
+it('iterates with peaking', () => {
+  var subjects = ['Calculus','Astronomy','Yoga','Latin'];
+  var subjectList = new LinkedList();
+  for(let i = 0;i < subjects.length;i++) {
+    subjectList.addElem(subjects[i]);
+  }
+  let subjectList_i = subjectList.iterator();
+  //peek and iterate to Calculus
+  expect(subjectList_i.peekNext()).toBe('Calculus');
+  subjectList_i.next();
+  //peek and iterate until the end
+  while(subjectList_i.hasNext()) {
+    expect(subjectList_i.peekNext()).toBe(subjectList_i.next());
+  }
+});
+
 it('iterates and deletes properly', () => {
   var subjects = ['Calculus','Astronomy','Yoga','Latin'];
   var subjectList = new LinkedList();

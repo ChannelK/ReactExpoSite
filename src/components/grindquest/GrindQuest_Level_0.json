@@ -1,0 +1,45 @@
+{
+  "levelProps":{
+    "numLanes" : 3
+  },
+  "pickupTypes" : {
+    "BrownBean" : {
+      "icon":"image.jpg"
+    },
+    "GreenBean" : {
+      "icon":"image.jpg"
+    }
+  },
+  "pickupArray" : [
+    {
+      "type"    : "BrownBean",
+      "lane"    : 0,
+      "createAt": 1.0
+    },
+    {
+      "type"    : "GreenBean",
+      "lane"    : 1,
+      "createAt": 1.0
+    },
+    {
+      "type"    : "GreenBean",
+      "lane"    : 2,
+      "createAt": 1.0
+    },
+    {
+      "type"    : "BrownBean",
+      "lane"    : 0,
+      "createAt": 1.9
+    },
+    {
+      "type"    : "GreenBean",
+      "lane"    : 1,
+      "createAt": 2.2
+    },
+    {
+      "type"    : "GreenBean",
+      "lane"    : 2,
+      "createAt": 2.8
+    }
+  ]
+}

@@ -131,6 +131,10 @@ class Iterator {
       return this.current.next !== null;
   }
   
+  peekNext() {
+    return this.current.next.val;
+  }
+  
   next() {
     if(!this.hasNext())
       alert("Tried to get next when there is no next!");

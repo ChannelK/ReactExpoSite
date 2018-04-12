@@ -6,7 +6,9 @@ import ElemGroup from './ElemGroup';
 import groundImg from '../../assets/PixelGrass.png';
 import { State } from './FiniteStateMachine';
 import FiniteStateMachine from './FiniteStateMachine';
-import GamePickups from './GamePickups';
+import { PickupTracker } from './GamePickups';
+
+import level from './GrindQuest_Level_0.json';
 
 class ScrollGround extends CenterElem {
   constructor(x,y,width,height,scrollSpeed,srcImg) {
@@ -176,6 +178,8 @@ function changeGameState(newState) {
     this.playerLane = 1;
     this.playerMoving = false;
     this.groundSpeed = 0;
+    this.elems.pickupTracker.quit();
+    this.elems.pickupTracker.disableMove();
     this.elems.countdownText.disableCounter();
     
     this.menuFSM.enable();
@@ -188,6 +192,8 @@ function changeGameState(newState) {
     this.playerLane = 1;
     this.playerMoving = false;
     this.groundSpeed = 0;
+    this.elems.pickupTracker.loadLevel(this.elems.player,this.level);
+    this.elems.pickupTracker.disableMove();
     this.elems.countdownText.resetCounter();
     
     this.menuFSM.disable();
@@ -201,6 +207,7 @@ function changeGameState(newState) {
     this.playerLane = 1;
     this.playerMoving = false;
     this.groundSpeed = this.maxGroundSpeed;
+    this.elems.pickupTracker.enableMove();
     this.counter = 0;
     this.elems.countdownText.disableCounter();
     
@@ -214,6 +221,7 @@ function changeGameState(newState) {
     this.playerMoving = false;
     this.groundSpeed = 0;
     this.counter = 0;
+    this.elems.pickupTracker.disableMove();
     
     this.menuFSM.enable();
     this.menuFSM.setState('menubtn_reset');
@@ -359,6 +367,9 @@ class PlayScreen extends GameScreen {
   constructor(p,setCurrentScreen,canvasWidth,canvasHeight,debug) {
     super(p,setCurrentScreen,canvasWidth,canvasHeight,debug);
     
+    //this will be selectable in the future
+    this.level = level;
+    
     //constants for game state
     this.FIRSTRUN = 0;
     this.COUNTDOWN = 1;
@@ -419,6 +430,9 @@ class PlayScreen extends GameScreen {
     let cursorHeight = this.widthPctI(6);
     let cursorOffsetX = this.widthPctI(-6);
     let cursorOffsetY = 0;
+    //pickups pos/size
+    let pickupWidth = this.widthPctI(7);
+    let pickupHeight = this.widthPctI(7);
     
     //menu button styling
     let menuBtnFont = 'Helvetica';
@@ -567,6 +581,9 @@ class PlayScreen extends GameScreen {
         menuBtnColor, menuBtnFont, menuBtnTextColor
       );
     }
+    //add the pickup tracker, referencing the laneGroup elem
+    this.elems.pickupTracker = new PickupTracker(this.elems.laneGroup,
+      pickupWidth,pickupHeight,this.maxGroundSpeed,this.heightPctI(100),this.targetFrameRate);
     //populate lane group
     this.elems.laneGroup.createLanes(numLanes);
     
@@ -582,6 +599,8 @@ class PlayScreen extends GameScreen {
     this.layout.push("ground");
     //lanes
     this.layout.push("laneGroup");
+    //pickup tracker
+    this.layout.push("pickupTracker");
     //player
     this.layout.push("player");
     //countdown group
@@ -674,6 +693,7 @@ class PlayScreen extends GameScreen {
     
     this.elems.countdownText.disableCounter();
     this.elems.ground.disableMove();
+    this.elems.pickupTracker.disableMove();
     this.menuFSM.enable();
     this.ctrlFSM.disable();
     
@@ -688,6 +708,7 @@ class PlayScreen extends GameScreen {
   resumeGame() {
     this.elems.countdownText.enableCounter();
     this.elems.ground.enableMove();
+    this.elems.pickupTracker.enableMove();
     this.menuFSM.disable();
     this.ctrlFSM.enable();
     
