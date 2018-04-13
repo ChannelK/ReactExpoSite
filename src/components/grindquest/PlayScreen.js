@@ -169,6 +169,31 @@ class Cursor extends CenterElem {
   }
 }
 
+class Scoreboard extends CenterElem {
+  constructor(x,y,width,height,textSize,pickupTracker) {
+    super(x,y,width,height);
+    this.textSize = textSize;
+    this.pickupTracker = pickupTracker;
+  }
+  
+  render(p) {
+    p.push();
+    //should display out Collected x / y
+    let picked = this.pickupTracker.picked;
+    let allPickups = this.pickupTracker.levelPickups;
+    let collected = (picked === null)?"--":picked.length;
+    let total = (allPickups === null)?"--":allPickups.length;
+    p.rectMode(p.CENTER);
+    p.fill('rgb(10,10,10)');
+    p.rect(this.x,this.y,this.width,this.height);
+    p.fill('rgb(256,256,256)');
+    p.textSize(this.textSize);
+    p.textAlign(p.CENTER);
+    p.text("Collected "+collected+"/"+total,this.x,this.y);
+    p.pop();
+  }
+}
+
 function changeGameState(newState) {
   if(this.paused) {
     this.resumeGame();    
@@ -433,6 +458,11 @@ class PlayScreen extends GameScreen {
     //pickups pos/size
     let pickupWidth = this.widthPctI(7);
     let pickupHeight = this.widthPctI(7);
+    //scoreboard pos/size
+    let scoreboardPosX = this.widthPctI(80);
+    let scoreboardPosY = this.heightPct(8);
+    let scoreboardWidth = this.widthPctI(30);
+    let scoreboardHeight = this.heightPctI(10);
     
     //menu button styling
     let menuBtnFont = 'Helvetica';
@@ -449,11 +479,13 @@ class PlayScreen extends GameScreen {
     //countdown styling
     let countdownBoxMargin = this.heightPctI(1);
     let countdownRounding  = this.widthPctI(0.5);
-    let countdownBoxColor = "rgba(20,20,20,200)";
+    let countdownBoxColor = "rgb(20,20,20)";
     let countdownFont = "Arial";
     let countdownTextColor = "rgb(256,256,256)";
     //menu overlay styling
     let menuOverlayColor = this.p.color(20,20,20,150);
+    //scoreboard styling
+    let scoreboardTextSize = this.widthPctI(4);
     
     //list all menu buttons
     this.menuBtnElems = ['menubtn_start','menubtn_back','menubtn_resume','menubtn_reset','menubtn_quit'];
@@ -590,6 +622,10 @@ class PlayScreen extends GameScreen {
     this.elems.pickupTracker = new PickupTracker(this.p,this.elems.laneGroup,
       pickupWidth,pickupHeight,this.maxGroundSpeed,this.heightPctI(100),
       this.targetFrameRate,gameoverCallback);
+    //add the scoreboard, referencing the pickup tracker
+    this.elems.scoreboard = new Scoreboard(scoreboardPosX,scoreboardPosY,
+      scoreboardWidth,scoreboardHeight,scoreboardTextSize,this.elems.pickupTracker);
+      
     //populate lane group
     this.elems.laneGroup.createLanes(numLanes);
     
@@ -609,6 +645,8 @@ class PlayScreen extends GameScreen {
     this.layout.push("pickupTracker");
     //player
     this.layout.push("player");
+    //countdown
+    this.layout.push("scoreboard");
     //countdown group
     this.layout.push("countdownText");
     this.elemVisible["countdownText"] = false;
