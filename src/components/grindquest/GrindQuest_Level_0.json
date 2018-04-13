@@ -1,6 +1,7 @@
 {
   "levelProps":{
-    "numLanes" : 3
+    "numLanes" : 3,
+    "goalPickups": 10
   },
   "pickupTypes" : {
     "BrownBean" : {

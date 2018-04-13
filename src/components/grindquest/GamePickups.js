@@ -29,6 +29,9 @@ class PickupTracker {
     //calls this when the game is finished
     this.gameoverCallback = gameoverCallback;
     
+    //the required amount of pickups
+    this.goalPickups = null;
+    
     //timer for keeping track of game creation
     this.totalTime = 0;
     
@@ -54,6 +57,7 @@ class PickupTracker {
     this.queuedPickups = new LinkedList();
     this.activePickups = new LinkedList();
     this.type2Icon = {};
+    this.goalPickups = level.levelProps.goalPickups;
     //sort the pickups by creation time
     let pickupCreateOrder = [];
     for(let i = 0;i < this.levelPickups.length;i++)
@@ -141,7 +145,8 @@ class PickupTracker {
     //console.log("Checking end condition");
     //console.log("  active:"+this.activePickups.toString());
     //console.log("  queued:"+this.queuedPickups_i.hasNext());
-    return (this.activePickups.length === 0 && !this.queuedPickups_i.hasNext());
+    return (this.picked.length >= this.goalPickups) || 
+      (this.activePickups.length === 0 && !this.queuedPickups_i.hasNext());
   }
   
   render(p) {

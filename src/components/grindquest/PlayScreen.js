@@ -180,9 +180,9 @@ class Scoreboard extends CenterElem {
     p.push();
     //should display out Collected x / y
     let picked = this.pickupTracker.picked;
-    let allPickups = this.pickupTracker.levelPickups;
+    let allPickups = this.pickupTracker.goalPickups;
     let collected = (picked === null)?"--":picked.length;
-    let total = (allPickups === null)?"--":allPickups.length;
+    let total = (allPickups === null)?"--":allPickups;
     p.rectMode(p.CENTER);
     p.fill('rgb(10,10,10)');
     p.rect(this.x,this.y,this.width,this.height);
