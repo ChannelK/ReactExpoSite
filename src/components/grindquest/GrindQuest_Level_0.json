@@ -4,42 +4,34 @@
   },
   "pickupTypes" : {
     "BrownBean" : {
-      "icon":"image.jpg"
+      "icon":"brownBeanImg"
     },
     "GreenBean" : {
-      "icon":"image.jpg"
+      "icon":"greenBeanImg"
     }
   },
   "pickupArray" : [
-    {
-      "type"    : "BrownBean",
-      "lane"    : 0,
-      "createAt": 1.0
-    },
-    {
-      "type"    : "GreenBean",
-      "lane"    : 1,
-      "createAt": 1.0
-    },
-    {
-      "type"    : "GreenBean",
-      "lane"    : 2,
-      "createAt": 1.0
-    },
-    {
-      "type"    : "BrownBean",
-      "lane"    : 0,
-      "createAt": 1.9
-    },
-    {
-      "type"    : "GreenBean",
-      "lane"    : 1,
-      "createAt": 2.2
-    },
-    {
-      "type"    : "GreenBean",
-      "lane"    : 2,
-      "createAt": 2.8
-    }
+                                                 {"type":"BrownBean","lane":1,"createAt":0.5},
+    {"type":"BrownBean","lane":0,"createAt":1.5},{"type":"GreenBean","lane":1,"createAt":1.5},{"type":"BrownBean","lane":2,"createAt":1.5},
+                                                 {"type":"GreenBean","lane":1,"createAt":2.0},
+                                                                                              {"type":"GreenBean","lane":2,"createAt":2.5},
+    {"type":"BrownBean","lane":0,"createAt":3.5},{"type":"GreenBean","lane":1,"createAt":3.5},{"type":"BrownBean","lane":2,"createAt":3.5},
+                                                 {"type":"BrownBean","lane":1,"createAt":4.5},{"type":"GreenBean","lane":2,"createAt":4.5},
+    {"type":"BrownBean","lane":0,"createAt":6.0},                                             {"type":"BrownBean","lane":2,"createAt":6.0},
+    {"type":"GreenBean","lane":0,"createAt":6.6},                                             {"type":"BrownBean","lane":2,"createAt":6.6},
+    {"type":"BrownBean","lane":0,"createAt":7.2},                                             {"type":"GreenBean","lane":2,"createAt":7.2},
+    {"type":"BrownBean","lane":0,"createAt":7.8},                                             {"type":"BrownBean","lane":2,"createAt":7.8},
+                                                 {"type":"BrownBean","lane":1,"createAt":8.4},
+                                                 {"type":"BrownBean","lane":1,"createAt":9.0},
+                                                 {"type":"GreenBean","lane":1,"createAt":9.6},
+    {"type":"BrownBean","lane":0,"createAt":10.2},
+    {"type":"BrownBean","lane":0,"createAt":10.8},
+    {"type":"BrownBean","lane":0,"createAt":11.4},
+    {"type":"BrownBean","lane":0,"createAt":12.0},
+                                                 {"type":"BrownBean","lane":1,"createAt":12.6},
+                                                                                               {"type":"GreenBean","lane":2,"createAt":13.2},
+                                                 {"type":"BrownBean","lane":1,"createAt":13.8},
+    {"type":"BrownBean","lane":0,"createAt":14.4},
+    {"type":"GreenBean","lane":0,"createAt":15.0}
   ]
 }
