@@ -97,6 +97,9 @@ it('iterates and deletes properly', () => {
   expect(subjectList.toString()).toBe("[Astronomy,Yoga,Latin]");
   expect(subjectList_i.hasNext()).toBe(true);
   
+  //make sure order is preserved, next being astronomy
+  let astronomy = subjectList_i.next();
+  expect(astronomy).toBe("Astronomy");
   //iterate to latin and remove it
   subjectList_i.next();
   let latin = subjectList_i.next();

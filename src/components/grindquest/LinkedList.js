@@ -102,13 +102,7 @@ class Iterator {
   constructor(list) {
     this.list = list;
     this.prev = null;
-  }
-  
-  get current() {
-    if(this.prev===null)
-      return this.list;
-    else
-      return this.prev.next;
+    this.current = this.list;
   }
   
   remove() {
@@ -117,10 +111,9 @@ class Iterator {
       return null;
     }
     let val = this.current.val;
-    if(this.prev === null)
-      this.list.head = this.current.next;
-    else
-      this.prev.next = this.current.next;
+    this.prev.next = this.current.next;
+    this.current = this.prev;
+    this.list.size--;
     return val;
   }
   
@@ -139,10 +132,14 @@ class Iterator {
     if(!this.hasNext())
       alert("Tried to get next when there is no next!");
     this.prev = this.current;
+    this.current = this.current.next;
     return this.current.val;
   }
   
-  reset() {this.prev = null;}
+  reset() {
+    this.prev = null;
+    this.current = this.list;
+  }
 }
 
 export default LinkedList;
