@@ -276,6 +276,9 @@ function changeGameState(newState) {
   }
   //change the message to the new state's message
   let menuMessage = this.state2menuText[newState];
+  if(newState === this.STOPPED) {
+    menuMessage = "Score: "+(this.elems.pickupTracker.calcScore())+"%\n"+menuMessage;
+  }
   this.elems.menuText.text = menuMessage;
   
   this.gameState = newState;

@@ -149,6 +149,17 @@ class PickupTracker {
       (this.activePickups.length === 0 && !this.queuedPickups_i.hasNext());
   }
   
+  calcScore() {
+    let numGoodBeans = 0;
+    for(let i = 0;i < this.picked.length;i++) {
+      if(this.picked[i].type === "BrownBean")
+        numGoodBeans++;
+      console.log("Picked up a "+this.picked[i].type);
+    }
+    let score = numGoodBeans*100/this.goalPickups;
+    return score.toFixed(1);
+  }
+  
   render(p) {
     if(this.enabled && this.activePickups !== null) {
       this.totalTime+=this.secsPerFrame;
