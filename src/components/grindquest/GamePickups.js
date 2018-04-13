@@ -1,9 +1,11 @@
 import CenterElem from './CenterElem';
 import LinkedList from './LinkedList';
+import brownBeanImg from '../../assets/GameBean_brown.png';
+import greenBeanImg from '../../assets/GameBean_green.png';
 
 class PickupTracker {
   //constructor needs to get the lanes and pickup dimensions
-  constructor(laneGroup,pickupWidth,pickupHeight,pickupSpeed,bottomEdge,targetFrameRate) {
+  constructor(p,laneGroup,pickupWidth,pickupHeight,pickupSpeed,bottomEdge,targetFrameRate) {
     this.laneGroup = laneGroup;
     this.pickupWidth = pickupWidth;
     this.pickupHeight = pickupHeight;
@@ -27,6 +29,12 @@ class PickupTracker {
     
     //timer for keeping track of game creation
     this.totalTime = 0;
+    
+    //hard coded until a better alternative is found
+    this.icon2Image = {
+      brownBeanImg : p.loadImage(brownBeanImg),
+      greenBeanImg : p.loadImage(greenBeanImg)
+    };
   }
   
   enableMove() {
@@ -50,22 +58,26 @@ class PickupTracker {
       pickupCreateOrder.push(i);
     pickupCreateOrder.sort(
       function(a,b){
-          return this[a].createTime < this[b].createTime;
+          let isLT = this[a].createAt - this[b].createAt;
+          //console.log(this[a].createAt+" < "+this[b].createAt+" = "+isLT)
+          return isLT;
       }.bind(this.levelPickups)
     );
     //load the pickups and set its iterator
     for(let i = 0;i < pickupCreateOrder.length;i++) {
       let pickupIndex = pickupCreateOrder[i];
+      console.log("Queue pickup "+pickupIndex+" for time "+this.levelPickups[pickupIndex].createAt);
       this.queuedPickups.addElem(this.levelPickups[pickupIndex]);
     }
     this.queuedPickups_i = this.queuedPickups.iterator();
     //load images required
     let pickupTypes = Object.keys(level.pickupTypes);
     for(let i = 0;i < pickupTypes.length;i++) {
-      this.type2Icon[pickupTypes[i]] = level.pickupTypes[pickupTypes[i]].icon;
+      let pickupType = pickupTypes[i];
+      let icon = level.pickupTypes[pickupTypes[i]].icon;
+      this.type2Icon[pickupType] = icon;
     }
   }
-  
   //moves the group and returns and object if there is a collision
   tickGroup(time) {
     if(!this.enabled || this.activePickups === null) {
@@ -79,10 +91,11 @@ class PickupTracker {
       let y = -this.pickupHeight/2;
       //type will just change the image
       this.activePickups.addElem(new LanePickup(x,y,this.pickupWidth,this.pickupHeight,
-        this.pickupSpeed,pickupSpec.type,this.type2Icon[pickupSpec.type]
+        this.pickupSpeed,pickupSpec.type,this.icon2Image[this.type2Icon[pickupSpec.type]]
       ));
     }
     
+    console.log("Move at "+this.totalTime);
     //move all the pickups, remove if they have gone over the edge
     let iter = this.activePickups.iterator();
     while(iter.hasNext()) {
@@ -90,16 +103,21 @@ class PickupTracker {
       pickup.movePickup();
       if(pickup.topY >= this.bottomEdge) {
         //remove elem
-        console.log("Elem "+pickup+" went over the bottom edge");
+        //console.log("Elem "+pickup+" went over the bottom edge");
         iter.remove();
       }
     }
     iter.reset();
     //determine collisions and remove as necessary
     while(iter.hasNext()) {
+      console.log("Colliding with "+iter.phantomNext);
       let pickup = iter.next();
+      console.log(this.player);
+      console.log(" and  ");
+      console.log(pickup);
+      console.log("Active Pickups: "+this.activePickups.toString());
       if(this.player.rectCollision(pickup)) {
-        console.log("Player collided with elem"+pickup);
+        //console.log("Player collided with elem"+pickup);
         this.picked.push(iter.remove());
       }
     }
@@ -132,11 +150,11 @@ class PickupTracker {
 }
 
 class LanePickup extends CenterElem{
-  constructor(x,y,width,height,moveSpeed,type,icon) {
+  constructor(x,y,width,height,moveSpeed,type,image) {
     super(x,y,width,height);
     this.moveSpeed = moveSpeed;
     this.type = type;
-    this.icon = icon;
+    this.image = image;
   }
   
   movePickup(){
@@ -146,7 +164,7 @@ class LanePickup extends CenterElem{
   render(p) {
     p.push();
     p.fill('rgb(10,10,256)');
-    p.ellipse(this.x,this.y,this.width,this.height);
+    p.image(this.image,this.leftX,this.topY,this.width,this.height);
     p.pop();
   }
   

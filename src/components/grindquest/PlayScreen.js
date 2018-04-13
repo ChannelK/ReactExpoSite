@@ -521,7 +521,7 @@ class PlayScreen extends GameScreen {
     //misc ground
     let numLanes = 3;
     this.defaultLane = "laneGroup_"+Math.floor(numLanes/2);
-    this.maxGroundSpeed = 5.3;
+    this.maxGroundSpeed = 14;
     
     //the sub-object that keeps all the member elements
     this.elems = {
@@ -582,7 +582,7 @@ class PlayScreen extends GameScreen {
       );
     }
     //add the pickup tracker, referencing the laneGroup elem
-    this.elems.pickupTracker = new PickupTracker(this.elems.laneGroup,
+    this.elems.pickupTracker = new PickupTracker(this.p,this.elems.laneGroup,
       pickupWidth,pickupHeight,this.maxGroundSpeed,this.heightPctI(100),this.targetFrameRate);
     //populate lane group
     this.elems.laneGroup.createLanes(numLanes);
