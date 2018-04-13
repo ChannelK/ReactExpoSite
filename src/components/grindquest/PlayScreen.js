@@ -201,6 +201,7 @@ function changeGameState(newState) {
   
   if(newState === this.FIRSTRUN) {
     this.playerLane = 1;
+    this.updatePlayerLane();
     this.playerMoving = false;
     this.groundSpeed = 0;
     this.elems.pickupTracker.quit();
@@ -215,6 +216,7 @@ function changeGameState(newState) {
     this.elemVisible['pauseBtn'] = false;
   } else if(newState === this.COUNTDOWN) {
     this.playerLane = 1;
+    this.updatePlayerLane();
     this.playerMoving = false;
     this.groundSpeed = 0;
     this.elems.pickupTracker.loadLevel(this.elems.player,this.level);
@@ -230,6 +232,7 @@ function changeGameState(newState) {
     this.elemVisible['countdownText'] = true;
   } else if(newState === this.RUNNING) {
     this.playerLane = 1;
+    this.updatePlayerLane();
     this.playerMoving = false;
     this.groundSpeed = this.maxGroundSpeed;
     this.elems.pickupTracker.enableMove();
