@@ -479,7 +479,7 @@ class PlayScreen extends GameScreen {
     this.state2Btns[this.FIRSTRUN] = ['menubtn_start','menubtn_back'];
     this.state2Btns[this.COUNTDOWN] = ['menubtn_resume','menubtn_reset','menubtn_quit'];
     this.state2Btns[this.RUNNING] = ['menubtn_resume','menubtn_reset','menubtn_quit'];
-    this.state2Btns[this.STOPPED] = ['menubtn_start','menubtn_quit'];
+    this.state2Btns[this.STOPPED] = ['menubtn_reset','menubtn_quit'];
     
     //associate menu text with game state
     let pauseText = "Paused";
@@ -517,6 +517,11 @@ class PlayScreen extends GameScreen {
     };
     //specify countdown done action
     let handleCounterDone = (function() {this.changeGameState(this.RUNNING);}).bind(this);
+    //specify gameover action
+    let gameoverCallback = (function() {
+      console.log("STOPPING GAME");
+      this.changeGameState(this.STOPPED);
+    }).bind(this);
     
     //misc ground
     let numLanes = 3;
@@ -583,7 +588,8 @@ class PlayScreen extends GameScreen {
     }
     //add the pickup tracker, referencing the laneGroup elem
     this.elems.pickupTracker = new PickupTracker(this.p,this.elems.laneGroup,
-      pickupWidth,pickupHeight,this.maxGroundSpeed,this.heightPctI(100),this.targetFrameRate);
+      pickupWidth,pickupHeight,this.maxGroundSpeed,this.heightPctI(100),
+      this.targetFrameRate,gameoverCallback);
     //populate lane group
     this.elems.laneGroup.createLanes(numLanes);
     

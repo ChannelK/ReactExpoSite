@@ -5,7 +5,7 @@ import greenBeanImg from '../../assets/GameBean_green.png';
 
 class PickupTracker {
   //constructor needs to get the lanes and pickup dimensions
-  constructor(p,laneGroup,pickupWidth,pickupHeight,pickupSpeed,bottomEdge,targetFrameRate) {
+  constructor(p,laneGroup,pickupWidth,pickupHeight,pickupSpeed,bottomEdge,targetFrameRate,gameoverCallback) {
     this.laneGroup = laneGroup;
     this.pickupWidth = pickupWidth;
     this.pickupHeight = pickupHeight;
@@ -26,6 +26,8 @@ class PickupTracker {
     this.enabled = true;
     //relates pickup types to their icons
     this.type2Icon = null;
+    //calls this when the game is finished
+    this.gameoverCallback = gameoverCallback;
     
     //timer for keeping track of game creation
     this.totalTime = 0;
@@ -95,7 +97,6 @@ class PickupTracker {
       ));
     }
     
-    console.log("Move at "+this.totalTime);
     //move all the pickups, remove if they have gone over the edge
     let iter = this.activePickups.iterator();
     while(iter.hasNext()) {
@@ -110,18 +111,16 @@ class PickupTracker {
     iter.reset();
     //determine collisions and remove as necessary
     while(iter.hasNext()) {
-      console.log("Colliding with "+iter.phantomNext);
       let pickup = iter.next();
-      console.log(this.player);
-      console.log(" and  ");
-      console.log(pickup);
-      console.log("Active Pickups: "+this.activePickups.toString());
+      //console.log(this.player);
+      //console.log(" and  ");
+      //console.log(pickup);
+      //console.log("Active Pickups: "+this.activePickups.toString());
       if(this.player.rectCollision(pickup)) {
         //console.log("Player collided with elem"+pickup);
         this.picked.push(iter.remove());
       }
     }
-    return;
   }
   
   //clears everything
@@ -135,6 +134,16 @@ class PickupTracker {
     this.totalTime = 0;
   }
   
+  isGameOver() {
+    //the game's end condition
+    if(this.activePickups === null || this.queuedPickups === null)
+      return false;
+    //console.log("Checking end condition");
+    //console.log("  active:"+this.activePickups.toString());
+    //console.log("  queued:"+this.queuedPickups_i.hasNext());
+    return (this.activePickups.length === 0 && !this.queuedPickups_i.hasNext());
+  }
+  
   render(p) {
     if(this.enabled && this.activePickups !== null) {
       this.totalTime+=this.secsPerFrame;
@@ -146,6 +155,8 @@ class PickupTracker {
         iter.next().render(p);
       }
     }
+    if(this.enabled && this.isGameOver())
+      this.gameoverCallback();
   }
 }
 
