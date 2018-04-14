@@ -9,7 +9,6 @@ import FiniteStateMachine from './FiniteStateMachine';
 import { PickupTracker } from './GamePickups';
 import laneMarkerImg from '../../assets/LaneMarker.png';
 import playerCupImg from '../../assets/CoffeeCupIcon.png';
-
 import level from './GrindQuest_Level_0.json';
 
 class ScrollGround extends CenterElem {
@@ -33,7 +32,6 @@ class ScrollGround extends CenterElem {
   }
   
   moveGround() {
-    //this.sy = (this.sy+this.scrollSpeed) % (this.srcImg.height-this.srcImg.width-1);
     this.sy -= this.scrollSpeed;
     if(this.sy <= 0) {
       this.sy += this.srcImg.height-this.srcImg.width-2;
@@ -432,7 +430,7 @@ var CtrlStates = function(numLanes){
         return function() {
           //do nothing as player movement is handled in the key press
           //this may change later
-          //console.log("Entered Lane "+k);
+          console.log("Entered Lane "+k);
         };
   };
   
@@ -673,7 +671,6 @@ class PlayScreen extends GameScreen {
       let btnElem = this.menuBtnElems[i];
       let btnStr = this.menuBtnStrs[btnElem];
       let offset = this.menuBtnOffsetIndices[btnElem]*(menuBtnHeight+menuBtnSpace);
-      //(x,y,width,height,str,boxMargin,rounding,boxColor,font,textColor)
       this.elems[btnElem] = new MenuButton(
         menuBtnPosX, menuBtnPosY+offset, menuBtnWidth, menuBtnHeight,
         btnStr, menuBtnBoxMargin, menuBtnRounding,
@@ -863,7 +860,6 @@ class PlayScreen extends GameScreen {
     for(let i = 0;i < this.layout.length;i++) {
       let elemStr = this.layout[i];
       if(!(elemStr in this.elemVisible) || (this.elemVisible[elemStr] === true)) {
-        //console.log("Rendering "+elemStr);
         this.elems[elemStr].render(this.p);
       }
     }

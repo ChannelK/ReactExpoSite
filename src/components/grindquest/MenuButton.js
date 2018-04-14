@@ -30,7 +30,6 @@ class MenuButton extends CenterElem {
   }
   
   render(p) {
-    //console.log("Btn at "+this.x+","+this.y);
     p.push();
     p.noStroke();
     p.fill(this.boxColor);

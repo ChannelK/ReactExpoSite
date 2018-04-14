@@ -72,8 +72,6 @@ export default function RunnerGame (p) {
       sketchWidth = p.windowWidth;
     }
     canvas = p.createCanvas(sketchWidth,sketchHeight);
-    //console.log("Canvas is ");
-    //console.log(canvas);
     
     screens = {
       'title':new TitleScreen(p,setCurrentScreen,sketchWidth,sketchHeight,targetFrameRate),
@@ -81,7 +79,6 @@ export default function RunnerGame (p) {
       'howto':new HowToScreen(p,setCurrentScreen,sketchWidth,sketchHeight,targetFrameRate),
       'about':new AboutScreen(p,setCurrentScreen,sketchWidth,sketchHeight,targetFrameRate)};
     setCurrentScreen('title');
-    //currentScreen = screens['title'];
   }
   p.mouseMoved = function() {
     getCurrentScreen().handleMouseMove();

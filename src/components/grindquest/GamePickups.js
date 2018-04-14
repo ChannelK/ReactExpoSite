@@ -65,7 +65,6 @@ class PickupTracker {
     pickupCreateOrder.sort(
       function(a,b){
           let isLT = this[a].createAt - this[b].createAt;
-          //console.log(this[a].createAt+" < "+this[b].createAt+" = "+isLT)
           return isLT;
       }.bind(this.levelPickups)
     );
@@ -116,10 +115,6 @@ class PickupTracker {
     //determine collisions and remove as necessary
     while(iter.hasNext()) {
       let pickup = iter.next();
-      //console.log(this.player);
-      //console.log(" and  ");
-      //console.log(pickup);
-      //console.log("Active Pickups: "+this.activePickups.toString());
       if(this.player.rectCollision(pickup)) {
         //console.log("Player collided with elem"+pickup);
         this.picked.push(iter.remove());
@@ -142,9 +137,6 @@ class PickupTracker {
     //the game's end condition
     if(this.activePickups === null || this.queuedPickups === null)
       return false;
-    //console.log("Checking end condition");
-    //console.log("  active:"+this.activePickups.toString());
-    //console.log("  queued:"+this.queuedPickups_i.hasNext());
     return (this.picked.length >= this.goalPickups) || 
       (this.activePickups.length === 0 && !this.queuedPickups_i.hasNext());
   }
