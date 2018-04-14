@@ -178,6 +178,48 @@ class Cursor extends CenterElem {
   }
 }
 
+class Border extends CenterElem {
+  constructor(x,y,width,height,innerX,innerY,innerWidth,innerHeight,borderColor,cornerColor) {
+    super(x,y,width,height);
+    this.innerBox = new CenterElem(innerX,innerY,innerWidth,innerHeight);
+    this.borderColor = borderColor;
+    this.cornerColor = cornerColor;
+  }
+  render(p) {
+    p.push();
+    p.rectMode(p.CORNERS);
+    p.fill(this.borderColor);
+    //top
+    p.rect(this.innerBox.leftX,this.topY,
+      this.innerBox.rightX,this.innerBox.topY);
+    //bottom
+    p.rect(this.innerBox.leftX,this.innerBox.bottomY,
+      this.innerBox.rightX,this.bottomY);
+    //left
+    p.rect(this.leftX,this.innerBox.topY,
+      this.innerBox.leftX,this.innerBox.bottomY);
+    //right
+    p.rect(this.innerBox.rightX,this.innerBox.topY,
+      this.rightX,this.innerBox.bottomY);
+    
+    p.fill(this.cornerColor);
+    //top-left
+    p.rect(this.leftX,this.topY,
+      this.innerBox.leftX,this.innerBox.topY);
+    //top-right
+    p.rect(this.rightX,this.topY,
+      this.innerBox.rightX,this.innerBox.topY);
+    //bottom-left
+    p.rect(this.leftX,this.bottomY,
+      this.innerBox.leftX,this.innerBox.bottomY);
+    //bottom-right
+    p.rect(this.rightX,this.bottomY,
+      this.innerBox.rightX,this.innerBox.bottomY);
+      
+    p.pop();
+  }
+}
+
 class Scoreboard extends CenterElem {
   constructor(x,y,width,height,textSize,pickupTracker) {
     super(x,y,width,height);
@@ -479,6 +521,9 @@ class PlayScreen extends GameScreen {
     let scoreboardWidth = this.widthPctI(30);
     let scoreboardHeight = this.heightPctI(10);
     
+    //border styling
+    let borderColor = "rgb(70, 181, 68)";
+    let cornerColor = "rgb(71, 165, 69)";
     //menu button styling
     let menuBtnFont = 'Helvetica';
     let menuBtnColor = this.p.color(209, 176, 87);
@@ -585,6 +630,8 @@ class PlayScreen extends GameScreen {
       ground : new ScrollGround(this.widthPctI(50),this.heightPctI(50),groundWidth,groundHeight,
         0,this.p.loadImage(groundImg)
       ),
+      border : new Border(this.widthPct(50),this.heightPct(50),this.widthPct(100),this.widthPct(100),
+        this.widthPctI(50),this.heightPctI(50),groundWidth,groundHeight,borderColor,cornerColor),
       laneGroup : new LaneGroup(this.widthPctI(50),laneY,
         laneWidth,laneHeight,laneSpace,this.p.loadImage(laneMarkerImg)
       ),
@@ -660,6 +707,8 @@ class PlayScreen extends GameScreen {
     this.layout.push("pickupTracker");
     //player
     this.layout.push("player");
+    //border
+    this.layout.push("border");
     //countdown
     this.layout.push("scoreboard");
     //countdown group
