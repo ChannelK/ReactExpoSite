@@ -7,6 +7,8 @@ import groundImg from '../../assets/PixelGrass.png';
 import { State } from './FiniteStateMachine';
 import FiniteStateMachine from './FiniteStateMachine';
 import { PickupTracker } from './GamePickups';
+import laneMarkerImg from '../../assets/LaneMarker.png';
+import playerCupImg from '../../assets/CoffeeCupIcon.png';
 
 import level from './GrindQuest_Level_0.json';
 
@@ -50,31 +52,35 @@ class ScrollGround extends CenterElem {
   }
 }
 class Lane extends CenterElem {
-  constructor(x,y,width,height) {
+  constructor(x,y,width,height,laneMarkerImg) {
     super(x,y,width,height);
     this.markerOffsetX = 0;
     this.markerOffsetY = Math.round(height*0.2);
+    this.laneMarkerImg = laneMarkerImg;
   }
   
   render(p) {
-    let markerSide = Math.round(this.width/2);
+    let markerSide = Math.round(this.width/4);
     p.push();
     p.rectMode(p.CENTER);
     p.fill(237,201,175,150);
     p.rect(this.x,this.y,this.width,this.height);
     p.fill(10,10,10);
-    p.rect(this.x+this.markerOffsetX,this.y+this.markerOffsetY,
+    p.image(this.laneMarkerImg,
+      this.x+this.markerOffsetX-markerSide/2,
+      this.y+this.markerOffsetY-markerSide/2,
       markerSide,markerSide);
     p.pop();
   }
 }
 
 class LaneGroup extends ElemGroup {
-  constructor(x,y,width,height,laneSpace) {
+  constructor(x,y,width,height,laneSpace,laneMarkerImg) {
     super(x,y,width,height);
     this.laneWidth = width;
     this.laneHeight = height;
     this.laneSpace = laneSpace;
+    this.laneMarkerImg = laneMarkerImg;
   }
   
   getLanePosX(laneIndex) {
@@ -84,17 +90,20 @@ class LaneGroup extends ElemGroup {
   createLanes(numLanes) {
     let deltaX = this.laneSpace + this.laneWidth;
     for(let i = 0;i < numLanes;i++) {
-      this.addElemLocal(new Lane(deltaX * (-(numLanes-1)/2+i),0,this.laneWidth,this.laneHeight));
+      this.addElemLocal(new Lane(deltaX * (-(numLanes-1)/2+i),0,this.laneWidth,this.laneHeight,
+        this.laneMarkerImg));
     }
   }
 }
 
 class Player extends CenterElem {
+  constructor(x,y,width,height,playerImage) {
+    super(x,y,width,height);
+    this.playerImage = playerImage;
+  }
   render(p) {
     p.push();
-    p.rectMode(p.CENTER);
-    p.fill(256,120,120);
-    p.rect(this.x,this.y,this.width,this.height);
+    p.image(this.playerImage,this.leftX,this.topY,this.width,this.height);
     p.pop();
   }
 }
@@ -165,6 +174,48 @@ class Cursor extends CenterElem {
     p.noStroke();
     p.fill(this.cursorColor);
     p.ellipse(this.x,this.y,this.width,this.height);
+    p.pop();
+  }
+}
+
+class Border extends CenterElem {
+  constructor(x,y,width,height,innerX,innerY,innerWidth,innerHeight,borderColor,cornerColor) {
+    super(x,y,width,height);
+    this.innerBox = new CenterElem(innerX,innerY,innerWidth,innerHeight);
+    this.borderColor = borderColor;
+    this.cornerColor = cornerColor;
+  }
+  render(p) {
+    p.push();
+    p.rectMode(p.CORNERS);
+    p.fill(this.borderColor);
+    //top
+    p.rect(this.innerBox.leftX,this.topY,
+      this.innerBox.rightX,this.innerBox.topY);
+    //bottom
+    p.rect(this.innerBox.leftX,this.innerBox.bottomY,
+      this.innerBox.rightX,this.bottomY);
+    //left
+    p.rect(this.leftX,this.innerBox.topY,
+      this.innerBox.leftX,this.innerBox.bottomY);
+    //right
+    p.rect(this.innerBox.rightX,this.innerBox.topY,
+      this.rightX,this.innerBox.bottomY);
+    
+    p.fill(this.cornerColor);
+    //top-left
+    p.rect(this.leftX,this.topY,
+      this.innerBox.leftX,this.innerBox.topY);
+    //top-right
+    p.rect(this.rightX,this.topY,
+      this.innerBox.rightX,this.innerBox.topY);
+    //bottom-left
+    p.rect(this.leftX,this.bottomY,
+      this.innerBox.leftX,this.innerBox.bottomY);
+    //bottom-right
+    p.rect(this.rightX,this.bottomY,
+      this.innerBox.rightX,this.innerBox.bottomY);
+      
     p.pop();
   }
 }
@@ -439,8 +490,8 @@ class PlayScreen extends GameScreen {
     //player pos/size
     let playerPosX = this.widthPctI(50);
     let playerPosY = this.heightPctI(85);
-    let playerWidth = this.widthPctI(5);
-    let playerHeight = this.widthPctI(5);
+    let playerWidth = this.widthPctI(9);
+    let playerHeight = this.widthPctI(9);
     //dialogue pos/size
     let dialoguePosX = this.widthPctI(50);
     let dialoguePosY = this.heightPctI(30);
@@ -470,6 +521,9 @@ class PlayScreen extends GameScreen {
     let scoreboardWidth = this.widthPctI(30);
     let scoreboardHeight = this.heightPctI(10);
     
+    //border styling
+    let borderColor = "rgb(70, 181, 68)";
+    let cornerColor = "rgb(71, 165, 69)";
     //menu button styling
     let menuBtnFont = 'Helvetica';
     let menuBtnColor = this.p.color(209, 176, 87);
@@ -576,10 +630,12 @@ class PlayScreen extends GameScreen {
       ground : new ScrollGround(this.widthPctI(50),this.heightPctI(50),groundWidth,groundHeight,
         0,this.p.loadImage(groundImg)
       ),
+      border : new Border(this.widthPct(50),this.heightPct(50),this.widthPct(100),this.widthPct(100),
+        this.widthPctI(50),this.heightPctI(50),groundWidth,groundHeight,borderColor,cornerColor),
       laneGroup : new LaneGroup(this.widthPctI(50),laneY,
-        laneWidth,laneHeight,laneSpace
+        laneWidth,laneHeight,laneSpace,this.p.loadImage(laneMarkerImg)
       ),
-      player : new Player(playerPosX,playerPosY,playerWidth,playerHeight),
+      player : new Player(playerPosX,playerPosY,playerWidth,playerHeight,this.p.loadImage(playerCupImg)),
       countdownText : new CountdownDisplay(
         countdownPosX, countdownPosY, countdownWidth, countdownHeight,
         countdownTextSize,countdownBoxMargin,countdownRounding,
@@ -651,6 +707,8 @@ class PlayScreen extends GameScreen {
     this.layout.push("pickupTracker");
     //player
     this.layout.push("player");
+    //border
+    this.layout.push("border");
     //countdown
     this.layout.push("scoreboard");
     //countdown group

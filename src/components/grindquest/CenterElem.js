@@ -24,6 +24,8 @@ class CenterElem {
   
   get x() { return this.centerX; }
   get y() { return this.centerY; }
+  get rightX() { return this.leftX + this.width; }
+  get bottomY() { return this.topY + this.height; }
   
   isAtPoint(x,y) { 
     if(x >= this.leftX && x <= this.leftX+this.width
