@@ -27,73 +27,40 @@
   },
   "recipes": [
     {
-      "name": "bepis",
-      "desc": "This delicate drink is test.",
+      "name": "Cafe Latte",
+      "desc": "A hot espresso drink made with a generous helping of milk and a bit of foam.",
       "image": "art_latte.jpeg",
       "ingredients": [
         {
-          "name" : "milk",
-          "quantity"  : 8,
-          "unit" : "fl oz"
-        },
-        {
-          "name" : "test juice",
-          "quantity"  : 999,
-          "unit" : "shots"
-        },
-        {
-          "name" : "valid powder",
+          "name" : "Espresso",
           "quantity"  : 1,
-          "unit" : "cups"
+          "unit" : "shot"
+        },
+        {
+          "name" : "Milk",
+          "quantity"  : 4,
+          "unit" : "fl oz"
         }
       ],
-      "directions": "Pour test juice into milk and sprinkle powder to taste."
+      "directions": "Steam the milk until microfoam begins to form. Brew the espresso and pour into a cup. Pour in milk, holding back the foam with a spoon. Spoon foam over the top."
     },
     {
-      "name": "pebib",
-      "desc": "A robust flavor for testers.",
-      "image": "art_latte.jpeg",
+      "name": "Cappucino",
+      "desc": "A hot espresso drink topped with an iconic thick layer of foam.",
+      "image": "1280px-Classic_Cappuccino.jpg",
       "ingredients": [
         {
-          "name" : "milk",
+          "name" : "Espresso",
           "quantity"  : 1,
+          "unit" : "shot"
+        },
+        {
+          "name" : "Milk",
+          "quantity"  : 2,
           "unit" : "fl oz"
-        },
-        {
-          "name" : "test juice",
-          "quantity"  : -1,
-          "unit" : "shots"
-        },
-        {
-          "name" : "valid powder",
-          "quantity"  : 8,
-          "unit" : "lb"
         }
       ],
-      "directions": "Consume all ingredients immediately."
-    },
-    {
-      "name": "Kelp Juice",
-      "desc": "A serious drink for serious people.",
-      "image": "green_shake.jpeg",
-      "ingredients": [
-        {
-          "name" : "Kelp",
-          "quantity"  : 9,
-          "unit" : "lb"
-        },
-        {
-          "name" : "Water",
-          "quantity"  : 3,
-          "unit" : "cups"
-        },
-        {
-          "name" : "Orange",
-          "quantity"  : 3,
-          "unit" : "count"
-        }
-      ],
-      "directions": "Blend kelp with water. Let mixture rest for 10 hours then pour into garbage. Garnish with whole oranges."
+      "directions": "Steam the milk until a thick layer of foam begins to form on top. Pour the espresso, milk, then foam in equal parts into the serving cup."
     },
     {
       "name": "Flat White",
